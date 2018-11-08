@@ -12,6 +12,8 @@ using CheatGameModel.Network;
 using CheatGameModel.Network.Messages;
 using CheatGameModel.Players;
 using System.IO;
+using NAudio.Wave;
+using System.Threading;
 
 namespace CheatGameApp
 {
@@ -20,6 +22,10 @@ namespace CheatGameApp
         private Card m_lastClaimCard; // = new Card(5, CardType.Heart);
         private VideoForm _videoCapture;
         private Demographics _demographics;
+
+        public WaveIn waveSource = null;
+        public WaveFileWriter waveFile = null;
+        System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
 
         public static TcpConnectionBase[] _tcpConnection = new TcpConnectionBase[2];
         public static bool IsServer = false;
@@ -33,7 +39,12 @@ namespace CheatGameApp
 
         public Form1()
         {
+          
             InitializeComponent();
+            //configure audio capture
+            audioRecordTimer.Interval = 4000;
+            audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
+            
             this.DoubleBuffered = true;
 
             LoadParams();
@@ -47,10 +58,12 @@ namespace CheatGameApp
             }
 
             // Start Video Capture
-           // ShowVideoForm();
+            // ShowVideoForm();
 
             //show demographics dialog
+          
             _demographics = ShowDemographicsForm();
+             
             //send demographics to opponent
             _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
 
@@ -405,6 +418,7 @@ namespace CheatGameApp
                 timeLabel.Visible = true;
                 turnLabel.Visible = true;
                 gamesCountLabel.Visible = true;
+                recordingLable.Visible = false;
                 timeLabel.Text = "00:00:00";
                 return;
             }
@@ -426,6 +440,7 @@ namespace CheatGameApp
                 allClaimsCountLabel.Visible = false;
                 gameDeckCountLabel.Visible = false;
                 turnOverCardsButton.Visible = false;
+                recordingLable.Visible = false;
                 allClaimsCountLabel.Text = "1 Cards";
                 gameDeckCountLabel.Text = "35 Cards";
                 StatusLabel.Visible = true;
@@ -583,6 +598,68 @@ namespace CheatGameApp
             deck.ResumeSelectionChanged();
             otherDeck.ResumeSelectionChanged();
         }
+
+        private void CaptureAudio()
+        {
+           
+            // Define the output wav file of the recorded audio
+            string outputFilePath = @"C:\Users\neite\OneDrive\Desktop\system_recorded_audio.wav";
+
+            //Console.WriteLine("Now recording...");
+            waveSource = new WaveIn();
+            waveSource.WaveFormat = new WaveFormat(16000, 1);
+
+            waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(waveSource_DataAvailable);
+            waveSource.RecordingStopped += new EventHandler<StoppedEventArgs>(waveSource_RecordingStopped);
+
+            waveFile = new WaveFileWriter(outputFilePath, waveSource.WaveFormat);
+
+            recordingLable.Visible = true;
+            waveSource.StartRecording();
+      
+            audioRecordTimer.Start();
+            audioRecordTimer.Enabled = true;
+
+        }
+
+        void audioRecordTimer_Tick(object sender, EventArgs e)
+        {
+            waveSource.StopRecording();
+            waveSource.Dispose();
+            waveSource = null;
+            //writer.Close();
+            // writer = null;
+
+            recordingLable.Visible = false;
+            //disable the timer here so it won't fire again...
+            audioRecordTimer.Enabled = false;
+        }
+
+        void waveSource_DataAvailable(object sender, WaveInEventArgs e)
+        {
+            if (waveFile != null)
+            {
+                waveFile.Write(e.Buffer, 0, e.BytesRecorded);
+                waveFile.Flush();
+            }
+        }
+
+        void waveSource_RecordingStopped(object sender, StoppedEventArgs e)
+        {
+            if (waveSource != null)
+            {
+                waveSource.Dispose();
+                waveSource = null;
+            }
+
+            if (waveFile != null)
+            {
+                waveFile.Dispose();
+                waveFile = null;
+            }
+
+        }
+
         private void OnMakeMoveButton_Click(object sender, EventArgs e)
         {
             // get the turn's move
@@ -596,6 +673,8 @@ namespace CheatGameApp
             move.SetClaimMoveCards(claimMove);
             move.MoveTime = TimeStamper.Time; // NOTE: this is not used on the server side due to clock differences
             move.MoveType = MoveType.PlayMove;
+
+            CaptureAudio();
 
             // send the move to the server
             _tcpConnection[connIndex].Send(new MoveMessage(move));
@@ -646,6 +725,11 @@ namespace CheatGameApp
         {
             m_gameTime += TimeSpan.FromMilliseconds(gameTimer.Interval);
             timeLabel.Text = string.Format("{0:00}:{1:00}:{2:00}", m_gameTime.Hours, m_gameTime.Minutes, m_gameTime.Seconds);
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

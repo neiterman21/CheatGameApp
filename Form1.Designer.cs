@@ -50,6 +50,7 @@
             this.gamesCountLabel = new System.Windows.Forms.Label();
             this.turnLabel = new System.Windows.Forms.Label();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
+            this.recordingLable = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // StartGameButton
@@ -301,12 +302,25 @@
             this.gameTimer.Interval = 1000;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
+            // recordingLable
+            // 
+            this.recordingLable.AutoSize = true;
+            this.recordingLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.recordingLable.Location = new System.Drawing.Point(335, 260);
+            this.recordingLable.Name = "recordingLable";
+            this.recordingLable.Size = new System.Drawing.Size(213, 32);
+            this.recordingLable.TabIndex = 14;
+            this.recordingLable.Text = "state your claim";
+            this.recordingLable.Visible = false;
+            this.recordingLable.Click += new System.EventHandler(this.label1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::CheatGameApp.Properties.Resources.cheatGameDesign;
             this.ClientSize = new System.Drawing.Size(916, 625);
+            this.Controls.Add(this.recordingLable);
             this.Controls.Add(this.turnLabel);
             this.Controls.Add(this.gamesCountLabel);
             this.Controls.Add(this.timeLabel);
@@ -362,10 +376,7 @@
         private System.Windows.Forms.Label gamesCountLabel;
         private System.Windows.Forms.Label turnLabel;
         private System.Windows.Forms.Timer gameTimer;
-
-
-
-
+        private System.Windows.Forms.Label recordingLable;
     }
 }
 
