@@ -234,6 +234,7 @@ namespace CheatGameModel.Network
         public void Send(Message message)
         {
             //get message bytes
+            Console.WriteLine("sending ");
             byte[] messageBytes = message.GetBytes();
 
             //framed bytes
@@ -250,10 +251,15 @@ namespace CheatGameModel.Network
                 if (m_socket.Connected)
                 {
                     //File.AppendAllText("C:\\Liar\\log.txt", "before send " + message.Type + Environment.NewLine);
-                    m_socket.BeginSend(paddedMessageBytes, 0, paddedMessageBytes.Length, SocketFlags.None, null, null);                    
-                    
+                    m_socket.BeginSend(paddedMessageBytes, 0, paddedMessageBytes.Length, SocketFlags.None, null, null);
+                    Console.WriteLine("sending " + paddedMessageBytes.Length);
                     //File.AppendAllText("C:\\Liar\\log.txt", "after send " + message.Type + Environment.NewLine);
                 }
+           
+        }
+        public void Send(string file)
+        {
+            m_socket.SendFile(file);
         }
         public abstract void Dispose();
     }

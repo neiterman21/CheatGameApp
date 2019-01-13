@@ -14,6 +14,7 @@ using CheatGameModel.Players;
 using System.IO;
 using NAudio.Wave;
 using System.Threading;
+using System.Diagnostics;
 
 namespace CheatGameApp
 {
@@ -26,6 +27,9 @@ namespace CheatGameApp
         public WaveIn waveSource = null;
         public WaveFileWriter waveFile = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
+        // Define the output wav file of the recorded audio
+        string outputFilePath;
+        ManualResetEvent isRecordingEvent = new ManualResetEvent(false);
 
         public static TcpConnectionBase[] _tcpConnection = new TcpConnectionBase[2];
         public static bool IsServer = false;
@@ -38,13 +42,9 @@ namespace CheatGameApp
         public const int NUM_PLAYERS = 2;
 
         public Form1()
-        {
-          
+        {          
             InitializeComponent();
-            //configure audio capture
-            audioRecordTimer.Interval = 4000;
-            audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
-            
+          
             this.DoubleBuffered = true;
 
             LoadParams();
@@ -61,9 +61,12 @@ namespace CheatGameApp
             // ShowVideoForm();
 
             //show demographics dialog
-          
             _demographics = ShowDemographicsForm();
-             
+
+            //configure audio capture
+            audioRecordTimer.Interval = 4000;
+            audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
+            outputFilePath = @"C:\Users\neite\OneDrive\Desktop\recordings\system_recorded_audio" + _demographics.FullName + ".wav";
             //send demographics to opponent
             _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
 
@@ -601,10 +604,6 @@ namespace CheatGameApp
 
         private void CaptureAudio()
         {
-           
-            // Define the output wav file of the recorded audio
-            string outputFilePath = @"C:\Users\neite\OneDrive\Desktop\system_recorded_audio.wav";
-
             //Console.WriteLine("Now recording...");
             waveSource = new WaveIn();
             waveSource.WaveFormat = new WaveFormat(16000, 1);
@@ -615,11 +614,15 @@ namespace CheatGameApp
             waveFile = new WaveFileWriter(outputFilePath, waveSource.WaveFormat);
 
             recordingLable.Visible = true;
-            waveSource.StartRecording();
-      
+            Thread recordingThread = new Thread(waveSource.StartRecording);
+            recordingThread.Start();
+
             audioRecordTimer.Start();
             audioRecordTimer.Enabled = true;
+            
 
+
+            return;
         }
 
         void audioRecordTimer_Tick(object sender, EventArgs e)
@@ -633,6 +636,7 @@ namespace CheatGameApp
             recordingLable.Visible = false;
             //disable the timer here so it won't fire again...
             audioRecordTimer.Enabled = false;
+            isRecordingEvent.Set();
         }
 
         void waveSource_DataAvailable(object sender, WaveInEventArgs e)
@@ -657,7 +661,6 @@ namespace CheatGameApp
                 waveFile.Dispose();
                 waveFile = null;
             }
-
         }
 
         private void OnMakeMoveButton_Click(object sender, EventArgs e)
@@ -666,6 +669,15 @@ namespace CheatGameApp
             int[] realMove;
             int[] claimMove;
             GetMove(out realMove, out claimMove);
+            CaptureAudio();
+            while (!isRecordingEvent.WaitOne(200))
+            {
+                // NAudio requires the windows message pump to be operational
+                // this works but you better raise an event
+                Application.DoEvents();
+            }
+
+            isRecordingEvent.Reset();
 
             // prepare the move message's properties in case of a Play Move command
             var move = new Move();
@@ -674,16 +686,17 @@ namespace CheatGameApp
             move.MoveTime = TimeStamper.Time; // NOTE: this is not used on the server side due to clock differences
             move.MoveType = MoveType.PlayMove;
 
-            CaptureAudio();
-
             // send the move to the server
             _tcpConnection[connIndex].Send(new MoveMessage(move));
+            _tcpConnection[connIndex].Send(outputFilePath);
+
         }
 
         private void StartGameButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.StartPressed,
-                                                                      MoveTime = TimeStamper.Time }));
+                                                                      MoveTime = TimeStamper.Time
+            }));
         } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         #endregion Form Events
@@ -691,13 +704,15 @@ namespace CheatGameApp
         private void TakeCardButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.TakeCard,
-                                                                      MoveTime = TimeStamper.Time }));
+                                                                      MoveTime = TimeStamper.Time
+            }));
         } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         private void CallCheatButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.CallCheat,
-                                                                      MoveTime = TimeStamper.Time }));
+                                                                      MoveTime = TimeStamper.Time
+            }));
         } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         protected override void OnClosed(EventArgs e)

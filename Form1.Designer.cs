@@ -305,7 +305,9 @@
             // recordingLable
             // 
             this.recordingLable.AutoSize = true;
+            this.recordingLable.BackColor = System.Drawing.SystemColors.HotTrack;
             this.recordingLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.recordingLable.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.recordingLable.Location = new System.Drawing.Point(335, 260);
             this.recordingLable.Name = "recordingLable";
             this.recordingLable.Size = new System.Drawing.Size(213, 32);

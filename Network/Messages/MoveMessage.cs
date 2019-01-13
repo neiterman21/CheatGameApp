@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.IO;
 using CheatGameApp;
 using System.Collections.ObjectModel;
+using NAudio.Wave;
 
 namespace CheatGameModel.Network.Messages
 {
@@ -49,6 +51,7 @@ namespace CheatGameModel.Network.Messages
     {
         public TimeSpan MoveTime { get; set; }
         public MoveType MoveType { get; set; }
+        
 
         // real move cards
         public int Ace { get; set; }
