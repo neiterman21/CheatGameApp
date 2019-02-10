@@ -7,11 +7,13 @@ using System.Net.Sockets;
 using System.Xml;
 using System.IO;
 using System.Threading;
+using CheatGameApp;
 
 namespace CheatGameModel.Network
 {
     public abstract class TcpConnectionBase : IDisposable
     {
+        
         public abstract void SetIPEndPoints(string serverIPEndPoint, string ClientIPEndPoint);
 
         public event EventHandler Started;
@@ -73,7 +75,14 @@ namespace CheatGameModel.Network
             try
             {
                 int count = m_socket.EndReceive(result);
-
+                if (count > 1000) //this is an audio file
+                {
+                    byte[] array2 = this.m_buffer;
+                    var bw = new BinaryWriter(File.Open(Form1.recived_file_tmp_location, FileMode.OpenOrCreate));
+                    bw.Write(array2);
+                    bw.Flush();
+                    bw.Close();
+                }
                 byte[] incomingMsg = new byte[count];
                 Buffer.BlockCopy(m_buffer, 0, incomingMsg, 0, count);
 
@@ -259,7 +268,7 @@ namespace CheatGameModel.Network
         }
         public void Send(string file)
         {
-            m_socket.SendFile(file);
+          m_socket.SendFile(file );
         }
         public abstract void Dispose();
     }

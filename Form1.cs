@@ -15,6 +15,8 @@ using System.IO;
 using NAudio.Wave;
 using System.Threading;
 using System.Diagnostics;
+using CentipedeModel.Network.Messages;
+using NAudio.Utils;
 
 namespace CheatGameApp
 {
@@ -25,10 +27,14 @@ namespace CheatGameApp
         private Demographics _demographics;
 
         public WaveIn waveSource = null;
+        WaveOutEvent waveOut = null;
         public WaveFileWriter waveFile = null;
+        AudioFileReader Reader = null;
+        MemoryStream ws = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
         // Define the output wav file of the recorded audio
         string outputFilePath;
+        public static string recived_file_tmp_location;
         ManualResetEvent isRecordingEvent = new ManualResetEvent(false);
 
         public static TcpConnectionBase[] _tcpConnection = new TcpConnectionBase[2];
@@ -42,7 +48,7 @@ namespace CheatGameApp
         public const int NUM_PLAYERS = 2;
 
         public Form1()
-        {          
+        {
             InitializeComponent();
           
             this.DoubleBuffered = true;
@@ -67,7 +73,8 @@ namespace CheatGameApp
             audioRecordTimer.Interval = 4000;
             audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
             outputFilePath = @"C:\Users\neite\OneDrive\Desktop\recordings\system_recorded_audio" + _demographics.FullName + ".wav";
-            //send demographics to opponent
+            recived_file_tmp_location = @"C: \Users\neite\OneDrive\Desktop\system_recorded_audio_recieved_player" + _demographics.FullName + ".wav";
+        //send demographics to opponent
             _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
 
             //InitGUI();
@@ -158,6 +165,24 @@ namespace CheatGameApp
                 connIndex = 1;
             }                
         }
+        protected void OnPlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            Reader.Position = 0;
+        }
+        protected void Playrecording()
+        {
+            if (!File.Exists(recived_file_tmp_location))
+                return;
+            FileInfo f = new FileInfo(recived_file_tmp_location);
+            long s1 = f.Length;
+            if (s1 < 10)
+                return;
+            waveOut = new WaveOutEvent();
+            waveOut.PlaybackStopped += OnPlaybackStopped;   
+            Reader = new AudioFileReader(recived_file_tmp_location);
+            waveOut.Init(Reader);
+            waveOut.Play();
+        }
 
         protected void OnTcpConnection_MessageReceived(object sender, MessageEventArg e)
         {
@@ -219,6 +244,7 @@ namespace CheatGameApp
                     }
                     myDeck.ResumeSelectionChanged();
                 }
+                Playrecording();
             }
         }
 
@@ -602,7 +628,7 @@ namespace CheatGameApp
             otherDeck.ResumeSelectionChanged();
         }
 
-        private void CaptureAudio()
+        public WaveStream CaptureAudio()
         {
             //Console.WriteLine("Now recording...");
             waveSource = new WaveIn();
@@ -611,7 +637,8 @@ namespace CheatGameApp
             waveSource.DataAvailable += new EventHandler<WaveInEventArgs>(waveSource_DataAvailable);
             waveSource.RecordingStopped += new EventHandler<StoppedEventArgs>(waveSource_RecordingStopped);
 
-            waveFile = new WaveFileWriter(outputFilePath, waveSource.WaveFormat);
+            ws = new MemoryStream() ;
+            waveFile = new WaveFileWriter(new IgnoreDisposeStream(ws), waveSource.WaveFormat);
 
             recordingLable.Visible = true;
             Thread recordingThread = new Thread(waveSource.StartRecording);
@@ -619,10 +646,13 @@ namespace CheatGameApp
 
             audioRecordTimer.Start();
             audioRecordTimer.Enabled = true;
-            
-
-
-            return;
+            while (!isRecordingEvent.WaitOne(200))
+            {
+                // NAudio requires the windows message pump to be operational
+                // this works but you better raise an event
+                Application.DoEvents();
+            }
+            return new RawSourceWaveStream(ws, new WaveFormat(16000, 1));
         }
 
         void audioRecordTimer_Tick(object sender, EventArgs e)
@@ -630,8 +660,8 @@ namespace CheatGameApp
             waveSource.StopRecording();
             waveSource.Dispose();
             waveSource = null;
-            //writer.Close();
-            // writer = null;
+            //waveFile.Close();
+            //waveFile = null;
 
             recordingLable.Visible = false;
             //disable the timer here so it won't fire again...
@@ -669,14 +699,7 @@ namespace CheatGameApp
             int[] realMove;
             int[] claimMove;
             GetMove(out realMove, out claimMove);
-            CaptureAudio();
-            while (!isRecordingEvent.WaitOne(200))
-            {
-                // NAudio requires the windows message pump to be operational
-                // this works but you better raise an event
-                Application.DoEvents();
-            }
-
+            WaveStream ws = CaptureAudio();
             isRecordingEvent.Reset();
 
             // prepare the move message's properties in case of a Play Move command
@@ -687,8 +710,9 @@ namespace CheatGameApp
             move.MoveType = MoveType.PlayMove;
 
             // send the move to the server
+            _tcpConnection[connIndex].Send(new AudioMessage(ws));
             _tcpConnection[connIndex].Send(new MoveMessage(move));
-            _tcpConnection[connIndex].Send(outputFilePath);
+            
 
         }
 
