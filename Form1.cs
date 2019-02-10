@@ -27,9 +27,7 @@ namespace CheatGameApp
 
         // Define the output wav file of the recorded audio
         public WaveIn waveSource = null;
-        WaveOutEvent waveOut = null;
         public WaveFileWriter waveFile = null;
-        AudioFileReader Reader = null;
         MemoryStream ws = null;
         private WaveStream recived_wave_stream = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
@@ -162,14 +160,15 @@ namespace CheatGameApp
                 connIndex = 1;
             }                
         }
-        protected void OnPlaybackStopped(object sender, StoppedEventArgs e)
+        protected void OnPlaybackStopped(object obj , StoppedEventArgs e) 
         {
-            Reader.Position = 0;
+          recived_wave_stream.Position = 0;
         }
         protected void Playrecording()
         {
           using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
           {
+            waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs>(OnPlaybackStopped);
             waveOut.Init(recived_wave_stream);
             waveOut.Play();
             while (waveOut.PlaybackState == PlaybackState.Playing)
@@ -245,6 +244,7 @@ namespace CheatGameApp
                AudioMessage message = e.Message as AudioMessage;
                recived_wave_stream = message.GetRecording();
                Playrecording();
+               replay.Visible = true;
             }
       }
 
@@ -448,6 +448,7 @@ namespace CheatGameApp
                 turnLabel.Visible = true;
                 gamesCountLabel.Visible = true;
                 recordingLable.Visible = false;
+                replay.Visible = false;
                 timeLabel.Text = "00:00:00";
                 return;
             }
@@ -478,6 +479,7 @@ namespace CheatGameApp
                 timeLabel.Visible = false;
                 turnLabel.Visible = false;
                 gamesCountLabel.Visible = false;
+                replay.Visible = false;
                 gameTimer.Stop();
                 return;
             }
@@ -712,16 +714,20 @@ namespace CheatGameApp
             // send the move to the server
             _tcpConnection[connIndex].Send(new AudioMessage(ws));
             _tcpConnection[connIndex].Send(new MoveMessage(move));
-            
+            //remove replay button if was visable
+            replay.Visible = false;
 
-        }
+
+    }
 
         private void StartGameButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.StartPressed,
                                                                       MoveTime = TimeStamper.Time
             }));
-        } // NOTE: MoveTime may not be used on the server side due to clock differences
+            //remove replay button if was visable
+            replay.Visible = false;
+    } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         #endregion Form Events
 
@@ -730,14 +736,18 @@ namespace CheatGameApp
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.TakeCard,
                                                                       MoveTime = TimeStamper.Time
             }));
-        } // NOTE: MoveTime may not be used on the server side due to clock differences
+            //remove replay button if was visable
+            replay.Visible = false;
+    } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         private void CallCheatButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.CallCheat,
                                                                       MoveTime = TimeStamper.Time
             }));
-        } // NOTE: MoveTime may not be used on the server side due to clock differences
+            //remove replay button if was visable
+            replay.Visible = false;
+    } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         protected override void OnClosed(EventArgs e)
         {
@@ -770,5 +780,10 @@ namespace CheatGameApp
         {
 
         }
+
+    private void replay_Click(object sender, EventArgs e)
+    {
+      Playrecording();
     }
+  }
 }
