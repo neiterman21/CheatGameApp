@@ -15,7 +15,6 @@ using System.IO;
 using NAudio.Wave;
 using System.Threading;
 using System.Diagnostics;
-using CentipedeModel.Network.Messages;
 using NAudio.Utils;
 
 namespace CheatGameApp
@@ -26,15 +25,15 @@ namespace CheatGameApp
         private VideoForm _videoCapture;
         private Demographics _demographics;
 
+        // Define the output wav file of the recorded audio
         public WaveIn waveSource = null;
         WaveOutEvent waveOut = null;
         public WaveFileWriter waveFile = null;
         AudioFileReader Reader = null;
         MemoryStream ws = null;
+        private WaveStream recived_wave_stream = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
-        // Define the output wav file of the recorded audio
-        string outputFilePath;
-        public static string recived_file_tmp_location;
+
         ManualResetEvent isRecordingEvent = new ManualResetEvent(false);
 
         public static TcpConnectionBase[] _tcpConnection = new TcpConnectionBase[2];
@@ -72,8 +71,6 @@ namespace CheatGameApp
             //configure audio capture
             audioRecordTimer.Interval = 4000;
             audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
-            outputFilePath = @"C:\Users\neite\OneDrive\Desktop\recordings\system_recorded_audio" + _demographics.FullName + ".wav";
-            recived_file_tmp_location = @"C: \Users\neite\OneDrive\Desktop\system_recorded_audio_recieved_player" + _demographics.FullName + ".wav";
         //send demographics to opponent
             _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
 
@@ -171,17 +168,15 @@ namespace CheatGameApp
         }
         protected void Playrecording()
         {
-            if (!File.Exists(recived_file_tmp_location))
-                return;
-            FileInfo f = new FileInfo(recived_file_tmp_location);
-            long s1 = f.Length;
-            if (s1 < 10)
-                return;
-            waveOut = new WaveOutEvent();
-            waveOut.PlaybackStopped += OnPlaybackStopped;   
-            Reader = new AudioFileReader(recived_file_tmp_location);
-            waveOut.Init(Reader);
+          using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+          {
+            waveOut.Init(recived_wave_stream);
             waveOut.Play();
+            while (waveOut.PlaybackState == PlaybackState.Playing)
+            {
+              System.Threading.Thread.Sleep(100);
+            }
+          }
         }
 
         protected void OnTcpConnection_MessageReceived(object sender, MessageEventArg e)
@@ -244,9 +239,14 @@ namespace CheatGameApp
                     }
                     myDeck.ResumeSelectionChanged();
                 }
-                Playrecording();
             }
-        }
+            if (e.Message is AudioMessage)
+            {
+               AudioMessage message = e.Message as AudioMessage;
+               recived_wave_stream = message.GetRecording();
+               Playrecording();
+            }
+      }
 
         protected Demographics ShowDemographicsForm()
         {

@@ -74,15 +74,7 @@ namespace CheatGameModel.Network
         {
             try
             {
-                int count = m_socket.EndReceive(result);
-                if (count > 1000) //this is an audio file
-                {
-                    byte[] array2 = this.m_buffer;
-                    var bw = new BinaryWriter(File.Open(Form1.recived_file_tmp_location, FileMode.OpenOrCreate));
-                    bw.Write(array2);
-                    bw.Flush();
-                    bw.Close();
-                }
+                int count = m_socket.EndReceive(result);           
                 byte[] incomingMsg = new byte[count];
                 Buffer.BlockCopy(m_buffer, 0, incomingMsg, 0, count);
 
@@ -123,7 +115,6 @@ namespace CheatGameModel.Network
                         //read values by name
                         XmlDocument xml = new XmlDocument();
                         xml.LoadXml(messageString);
-
                         //find message type
                         string msgTypeName = typeof(Message).AssemblyQualifiedName.Replace(".Message,", "." + xml.DocumentElement.GetAttribute("Type") + ",");
                         Type msgType = Type.GetType(msgTypeName);

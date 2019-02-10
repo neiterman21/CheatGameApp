@@ -11,9 +11,9 @@ using System.Drawing;
 using System.IO;
 using System.Xml;
 
-namespace CentipedeModel.Network.Messages
+namespace CheatGameModel.Network.Messages
 {
-  public sealed class AudioMessage : Message
+  public class AudioMessage : Message
   {
     private WaveStream ms;
     
@@ -23,6 +23,8 @@ namespace CentipedeModel.Network.Messages
     public AudioMessage(XmlDocument xml)
       : base(xml)
     {
+      byte[] raw = Convert.FromBase64String(xml.DocumentElement.GetAttribute("Value"));
+      ms = new RawSourceWaveStream(raw, 0, raw.Length, new WaveFormat(16000, 1));
     }
 
     public AudioMessage(WaveStream recording_)
