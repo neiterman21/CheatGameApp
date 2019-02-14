@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CheatGameApp.exe" size="862720">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CheatGameApp.exe" size="866304">
       <assemblyIdentity name="CheatGameApp" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>cTF3HCzPsvu/bf4BoFDBIsHVjKg=</dsig:DigestValue>
+        <dsig:DigestValue>kfIiKmV4B50y1I2/bZlRRRcPUqI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

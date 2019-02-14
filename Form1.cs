@@ -30,6 +30,7 @@ namespace CheatGameApp
         public WaveFileWriter waveFile = null;
         MemoryStream ws = null;
         private WaveStream recived_wave_stream = null;
+        private WaveStream claim_record = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
 
         ManualResetEvent isRecordingEvent = new ManualResetEvent(false);
@@ -195,6 +196,9 @@ namespace CheatGameApp
 
                 allClaimsDeckLabel.Deck = new Deck();
                 allClaimsDeckLabel.FacingUp = false;
+                makeMoveButton.Visible = false;
+                FalseRecord.Visible = false;
+                lowClaimOptionDeck.Visible = highClaimOptionDeck.Visible = false;
 
                 msgLabel.Text = string.IsNullOrEmpty(myBoard.BoardMsg) ? string.Empty : myBoard.BoardMsg;
 
@@ -356,8 +360,8 @@ namespace CheatGameApp
 
         private void UpdateClaimDecks(int count)
         {            
-            lowClaimOptionDeck.Visible =
-                highClaimOptionDeck.Visible = (count != 0);
+            //lowClaimOptionDeck.Visible =
+            //    highClaimOptionDeck.Visible = (count != 0);
             //if (count == 0)
             //    claimPanel.Visible = false;
             //else
@@ -398,8 +402,20 @@ namespace CheatGameApp
             }
 
             makeMoveButton.Enabled = lowClaimOptionDeck.GetSelectedCards().Count > 0 || highClaimOptionDeck.GetSelectedCards().Count > 0;
+            if ( count > 0 ) MakeClaim.Enabled = true;
+            else MakeClaim.Enabled = false;
             lowClaimOptionDeck.ResumeSelectionChanged();
             highClaimOptionDeck.ResumeSelectionChanged();
+        }
+
+        public void forfeitGame()
+        {
+            _tcpConnection[connIndex].Send(new MoveMessage(new Move
+            {
+                MoveType = MoveType.ForfeitGame,
+                MoveTime = TimeStamper.Time
+            }));
+            
         }
 
         private void ControlOfGameStates(BoardState myBoard)
@@ -441,7 +457,9 @@ namespace CheatGameApp
 
                 allClaimsCountLabel.Text = "1 Cards";
                 gameDeckCountLabel.Text = "35 Cards";
-                makeMoveButton.Visible = true;
+                makeMoveButton.Visible = false;
+                FalseRecord.Visible = false;
+                MakeClaim.Visible = true; MakeClaim.Enabled = false;
                 StartGameButton.Visible = false;
                 ControlOfNormalGameState(isMyTurn);
                 timeLabel.Visible = true;
@@ -467,6 +485,8 @@ namespace CheatGameApp
                 CallCheatButton.Visible = false;
                 StartGameButton.Visible = true;
                 makeMoveButton.Visible = false;
+                FalseRecord.Visible = false;
+                MakeClaim.Visible = false;
                 allClaimsCountLabel.Visible = false;
                 gameDeckCountLabel.Visible = false;
                 turnOverCardsButton.Visible = false;
@@ -701,8 +721,7 @@ namespace CheatGameApp
             int[] realMove;
             int[] claimMove;
             GetMove(out realMove, out claimMove);
-            WaveStream ws = CaptureAudio();
-            isRecordingEvent.Reset();
+
 
             // prepare the move message's properties in case of a Play Move command
             var move = new Move();
@@ -712,7 +731,7 @@ namespace CheatGameApp
             move.MoveType = MoveType.PlayMove;
 
             // send the move to the server
-            _tcpConnection[connIndex].Send(new AudioMessage(ws));
+            _tcpConnection[connIndex].Send(new AudioMessage(claim_record));
             _tcpConnection[connIndex].Send(new MoveMessage(move));
             //remove replay button if was visable
             replay.Visible = false;
@@ -784,6 +803,31 @@ namespace CheatGameApp
     private void replay_Click(object sender, EventArgs e)
     {
       Playrecording();
+    }
+
+    private void myDeck_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    private void MakeClaim_Click(object sender, EventArgs e)
+    {
+      claim_record  = CaptureAudio();
+      isRecordingEvent.Reset();
+      lowClaimOptionDeck.Visible =
+               highClaimOptionDeck.Visible = (myDeck.Deck.Count != 0);
+
+      myDeck.SelectClick = false;
+      makeMoveButton.Visible = FalseRecord.Visible = true;
+      makeMoveButton.Enabled = false;
+      FalseRecord.Enabled = true;
+     }
+
+    private void FalseRecord_Click(object sender, EventArgs e)
+    {
+      if (TakeCardButton.Enabled) TakeCardButton_Click(sender, e);
+      else forfeitGame();
+      
     }
   }
 }

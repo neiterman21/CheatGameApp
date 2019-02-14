@@ -16,7 +16,8 @@ namespace CheatGameModel.Network.Messages
         TakeCard = 1,
         CallCheat = 2,
         StartPressed = 3,
-        EndReveal = 4
+        EndReveal = 4,
+        ForfeitGame = 5
     }
 
     public sealed class MoveMessage : Message

@@ -257,10 +257,6 @@ namespace CheatGameModel.Network
                 }
            
         }
-        public void Send(string file)
-        {
-          m_socket.SendFile(file );
-        }
         public abstract void Dispose();
     }
 }
