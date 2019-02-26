@@ -54,6 +54,12 @@
             this.replay = new System.Windows.Forms.Button();
             this.MakeClaim = new System.Windows.Forms.Button();
             this.FalseRecord = new System.Windows.Forms.Button();
+            this.selfreplaybutton = new System.Windows.Forms.Button();
+            this.lowclaimhear = new CheatGameApp.DeckLabel();
+            this.highclaimhear = new CheatGameApp.DeckLabel();
+            this.hearedLowbutton = new System.Windows.Forms.Button();
+            this.hearedHighbutton = new System.Windows.Forms.Button();
+            this.hearednothing = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // StartGameButton
@@ -344,7 +350,7 @@
             // 
             // FalseRecord
             // 
-            this.FalseRecord.Location = new System.Drawing.Point(786, 525);
+            this.FalseRecord.Location = new System.Drawing.Point(786, 531);
             this.FalseRecord.Name = "FalseRecord";
             this.FalseRecord.Size = new System.Drawing.Size(85, 42);
             this.FalseRecord.TabIndex = 17;
@@ -353,12 +359,84 @@
             this.FalseRecord.Visible = false;
             this.FalseRecord.Click += new System.EventHandler(this.FalseRecord_Click);
             // 
+            // selfreplaybutton
+            // 
+            this.selfreplaybutton.Location = new System.Drawing.Point(50, 383);
+            this.selfreplaybutton.Name = "selfreplaybutton";
+            this.selfreplaybutton.Size = new System.Drawing.Size(85, 42);
+            this.selfreplaybutton.TabIndex = 18;
+            this.selfreplaybutton.Text = "Replay My Claim";
+            this.selfreplaybutton.UseVisualStyleBackColor = true;
+            this.selfreplaybutton.Visible = false;
+            this.selfreplaybutton.Click += new System.EventHandler(this.selfReplayButton_Click);
+            // 
+            // lowclaimhear
+            // 
+            this.lowclaimhear.BackColor = System.Drawing.Color.Transparent;
+            this.lowclaimhear.CardSize = new System.Drawing.Size(55, 76);
+            this.lowclaimhear.DeckCards = "0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0";
+            this.lowclaimhear.Location = new System.Drawing.Point(283, 206);
+            this.lowclaimhear.Name = "lowclaimhear";
+            this.lowclaimhear.Size = new System.Drawing.Size(80, 131);
+            this.lowclaimhear.TabIndex = 19;
+            this.lowclaimhear.Visible = false;
+            // 
+            // highclaimhear
+            // 
+            this.highclaimhear.BackColor = System.Drawing.Color.Transparent;
+            this.highclaimhear.CardSize = new System.Drawing.Size(55, 76);
+            this.highclaimhear.DeckCards = "0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0";
+            this.highclaimhear.Location = new System.Drawing.Point(512, 206);
+            this.highclaimhear.Name = "highclaimhear";
+            this.highclaimhear.Size = new System.Drawing.Size(80, 134);
+            this.highclaimhear.TabIndex = 20;
+            this.highclaimhear.Visible = false;
+            // 
+            // hearedLowbutton
+            // 
+            this.hearedLowbutton.Location = new System.Drawing.Point(282, 324);
+            this.hearedLowbutton.Name = "hearedLowbutton";
+            this.hearedLowbutton.Size = new System.Drawing.Size(81, 30);
+            this.hearedLowbutton.TabIndex = 21;
+            this.hearedLowbutton.Text = "heared low";
+            this.hearedLowbutton.UseVisualStyleBackColor = true;
+            this.hearedLowbutton.Visible = false;
+            this.hearedLowbutton.Click += new System.EventHandler(this.hearedLowbutton_Click);
+            // 
+            // hearedHighbutton
+            // 
+            this.hearedHighbutton.Location = new System.Drawing.Point(512, 324);
+            this.hearedHighbutton.Name = "hearedHighbutton";
+            this.hearedHighbutton.Size = new System.Drawing.Size(81, 30);
+            this.hearedHighbutton.TabIndex = 22;
+            this.hearedHighbutton.Text = "heared high";
+            this.hearedHighbutton.UseVisualStyleBackColor = true;
+            this.hearedHighbutton.Visible = false;
+            this.hearedHighbutton.Click += new System.EventHandler(this.hearedHighbutton_Click);
+            // 
+            // hearednothing
+            // 
+            this.hearednothing.Location = new System.Drawing.Point(384, 295);
+            this.hearednothing.Name = "hearednothing";
+            this.hearednothing.Size = new System.Drawing.Size(113, 42);
+            this.hearednothing.TabIndex = 23;
+            this.hearednothing.Text = "heared nothing or didn\'t understand";
+            this.hearednothing.UseVisualStyleBackColor = true;
+            this.hearednothing.Visible = false;
+            this.hearednothing.Click += new System.EventHandler(this.hearednothing_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::CheatGameApp.Properties.Resources.cheatGameDesign;
             this.ClientSize = new System.Drawing.Size(916, 625);
+            this.Controls.Add(this.hearednothing);
+            this.Controls.Add(this.hearedHighbutton);
+            this.Controls.Add(this.hearedLowbutton);
+            this.Controls.Add(this.highclaimhear);
+            this.Controls.Add(this.lowclaimhear);
+            this.Controls.Add(this.selfreplaybutton);
             this.Controls.Add(this.FalseRecord);
             this.Controls.Add(this.MakeClaim);
             this.Controls.Add(this.replay);
@@ -421,6 +499,12 @@
         private System.Windows.Forms.Button replay;
     private System.Windows.Forms.Button MakeClaim;
     private System.Windows.Forms.Button FalseRecord;
-  }
+        private System.Windows.Forms.Button selfreplaybutton;
+        private DeckLabel lowclaimhear;
+        private DeckLabel highclaimhear;
+        private System.Windows.Forms.Button hearedLowbutton;
+        private System.Windows.Forms.Button hearedHighbutton;
+        private System.Windows.Forms.Button hearednothing;
+    }
 }
 

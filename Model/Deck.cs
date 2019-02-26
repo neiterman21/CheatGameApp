@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CheatGameApp.Model
 {
-    public sealed class Deck : List<Card>
+    public sealed class Deck : List<Card> 
     {
         public static readonly Deck FullDeck = Deck.Parse("4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4");
 
@@ -28,6 +28,21 @@ namespace CheatGameApp.Model
             }
 
             return cardsByNumber;
+        }
+        public bool CompareTo(Deck other)
+        {
+            if (other.Count > this.Count)
+                return false;
+            if (other.Count < this.Count)
+                return false;
+            //same number of cards
+
+            foreach (var nw in this.GetCounts().Zip(other.GetCounts(), Tuple.Create))
+            {
+                if (nw.Item1 != nw.Item2)
+                    return false;
+            }
+            return true;
         }
         /// <summary>
         /// Retunrs an array of ints where for each index the count of cards with the index+1 count is set

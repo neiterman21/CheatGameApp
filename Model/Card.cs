@@ -56,6 +56,18 @@ namespace CheatGameApp
             m_number = type == CardType.Deck ? 3 : number;
             m_type = type == CardType.Deck? type: CardType.Heart;
         }
+
+        public Card(int[] cardcount) {
+            m_type = CardType.Heart;
+            m_number = 0;
+            for (int i = 0; i < 13; i++)
+            {
+                if (cardcount[i] != 0)
+                {
+                    m_number = i + 1;
+                }
+            }
+        }
         public Card Increase()
         {
             return new Card(m_number % Card.MaxNumber + 1, Type);
@@ -178,6 +190,18 @@ namespace CheatGameApp
 
             return decimal.Compare(Number, other.Number);
         }
+
+        public static bool operator >(Card operand1, Card operand2)
+        {
+            return operand1.CompareTo(operand2) == 1;
+        }
+
+        // Define the is less than operator.
+        public static bool operator <(Card operand1, Card operand2)
+        {
+            return operand1.CompareTo(operand2) == -1;
+        }
+
     }
     public class CardTypeConverter : ExpandableObjectConverter
     {

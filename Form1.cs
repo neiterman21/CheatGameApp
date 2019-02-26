@@ -163,14 +163,14 @@ namespace CheatGameApp
         }
         protected void OnPlaybackStopped(object obj , StoppedEventArgs e) 
         {
-          recived_wave_stream.Position = 0;
         }
-        protected void Playrecording()
+        protected void Playrecording(WaveStream record_strem)
         {
           using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
           {
-            waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs>(OnPlaybackStopped);
-            waveOut.Init(recived_wave_stream);
+            record_strem.Position = 0;
+            waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs                    >(OnPlaybackStopped);
+            waveOut.Init(record_strem);
             waveOut.Play();
             while (waveOut.PlaybackState == PlaybackState.Playing)
             {
@@ -198,6 +198,7 @@ namespace CheatGameApp
                 allClaimsDeckLabel.FacingUp = false;
                 makeMoveButton.Visible = false;
                 FalseRecord.Visible = false;
+                selfreplaybutton.Visible = false;
                 lowClaimOptionDeck.Visible = highClaimOptionDeck.Visible = false;
 
                 msgLabel.Text = string.IsNullOrEmpty(myBoard.BoardMsg) ? string.Empty : myBoard.BoardMsg;
@@ -206,7 +207,7 @@ namespace CheatGameApp
                 UpdateMyDeck(myBoard.GetCards());
                 myDeck.SelectNone();
 
-                UpdateLastClaimGroupBox(myBoard.LastClaimNum, myBoard.LastClaimType, myBoard.PlayedCardsNum);
+                UpdateLastClaimGroupBox(myBoard);
                 //mainDeckTopCard.Text = myBoard.BoardCardsNum.ToString();
                 gameDeckCountLabel.Text = myBoard.BoardCardsNum + " Cards";
                 if (gameDeckLabel.Deck.Count != myBoard.BoardCardsNum)
@@ -224,7 +225,7 @@ namespace CheatGameApp
                 CallCheatButton.Enabled = myBoard.CallCheatEnable;
                 UpdateClaimDecks(myDeck.GetSelectedCards().Count);
                 ControlOfGameStates(myBoard);
-                
+
                 //take card
                 if (!string.IsNullOrEmpty(myBoard.PlayerMsg) && myBoard.IsServerTurn)
                 {
@@ -247,10 +248,102 @@ namespace CheatGameApp
             {
                AudioMessage message = e.Message as AudioMessage;
                recived_wave_stream = message.GetRecording();
-               Playrecording();
+               Playrecording(recived_wave_stream);
                replay.Visible = true;
+
+               EnterVerifiyClaimState();
+
             }
-      }
+        }
+
+        private void EnableVerifiyClaimbuttons()
+        {
+            highclaimhear.Visible = true;
+            lowclaimhear.Visible = true;
+            hearedHighbutton.Visible = true;
+            hearedLowbutton.Visible = true;
+            hearednothing.Visible = true;
+            replay.Visible = true;
+            hearedHighbutton.BringToFront();
+            hearedLowbutton.BringToFront();
+        }
+
+        private void DisableVerifiyClaimbuttons()
+        {
+            highclaimhear.Visible = false;
+            lowclaimhear.Visible = false;
+            hearedHighbutton.Visible = false;
+            hearedLowbutton.Visible = false;
+            hearednothing.Visible = false;
+        }
+
+        private void DisableNonVerifiyClaimbuttons()
+        {
+            lastClaimDeckLabel.Visible = false;
+            allClaimsDeckLabel.Visible = false;
+            TakeCardButton.Visible = false;
+            MakeClaim.Visible = false;
+            CallCheatButton.Visible = false;
+        }
+
+        private void EnableNonVerifiyClaimbuttons()
+        {
+            lastClaimDeckLabel.Visible = true;
+            allClaimsDeckLabel.Visible = true;
+            TakeCardButton.Visible = true;
+            MakeClaim.Visible = true;
+            CallCheatButton.Visible = true;
+        }
+        protected void EnterVerifiyClaimState()
+        {
+            EnableVerifiyClaimbuttons();
+            DisableNonVerifiyClaimbuttons();
+        }
+
+        protected void ExitVerifiyClaimState()
+        {
+            DisableVerifiyClaimbuttons();
+            EnableNonVerifiyClaimbuttons();
+        }
+
+        protected void verifyClaim(Deck heared)
+        {
+            bool ishandeled = true;
+            if (!heared.CompareTo(lastClaimDeckLabel.Deck)) {
+                ishandeled = HandleCheatyOponet();
+            }   
+            if (ishandeled) {
+                ExitVerifiyClaimState();
+            }
+           
+        }
+
+        protected DialogResult PopVerificationMessageBox(string message)
+        {
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            return MessageBox.Show(message, "intent verification", buttons);
+        }
+
+        protected bool HandleCheatyOponet()
+        {
+            DialogResult result = PopVerificationMessageBox("What you have cliemed to hear is different than the Oponents claim. This insedent will be reported and handled manualy." +
+            " the cheating player may not get paid. Are you sure your statment is true?");
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                _tcpConnection[connIndex].Send(new MoveMessage(new Move
+                {
+                    MoveType = MoveType.CallCheatyOpponent,
+                    MoveTime = TimeStamper.Time
+                }));
+                return true;
+            }
+            else
+            {
+                EnterVerifiyClaimState();
+                return false;
+            }
+        }
 
         protected Demographics ShowDemographicsForm()
         {
@@ -282,8 +375,11 @@ namespace CheatGameApp
 
         #region Board Message Processing 
 
-        public void UpdateLastClaimGroupBox(string sLastClaimCount, string sLastClaimCardNumber, int playedCardsNum)
+        public void UpdateLastClaimGroupBox(BoardState myBoard)
         {
+            string sLastClaimCount       = myBoard.LastClaimNum;
+            string sLastClaimCardNumber  = myBoard.LastClaimType;
+            int playedCardsNum           = myBoard.PlayedCardsNum;
             // update global var that holds the last claim card
             int lastClaimCardNumber;
             if (sLastClaimCardNumber != "")
@@ -314,8 +410,28 @@ namespace CheatGameApp
             {
                 //LastClaimLabel.Text = sLastClaimCount + " x ";
                 Deck deck = new Deck();
+                Deck unchoosenClainDeck = new Deck(); // the other leagal claim posebilety
                 for (int i = 0; i < lastClaimCount; i++)
+                {
                     deck.Add(m_lastClaimCard);
+                }
+
+
+                //updating the claim verification deck
+                Deck low_claim_option_deck = new Deck();
+                Deck high_claim_option_deck = new Deck();
+
+                Card previusclaimcard = new Card(lastClaimDeckLabel.Deck.GetCounts());
+
+                for (int i = 0; i < lastClaimCount ; i++) //we already have 1 card in the decks
+                {
+                    low_claim_option_deck.Add(previusclaimcard.Decrease());
+                    high_claim_option_deck.Add(previusclaimcard.Increase());
+                }
+
+                lowclaimhear.Deck  = low_claim_option_deck;
+                highclaimhear.Deck = high_claim_option_deck;
+
                 lastClaimDeckLabel.Deck = deck;
                 //lastClaimDeckLabel.Deck =
             }
@@ -458,6 +574,7 @@ namespace CheatGameApp
                 allClaimsCountLabel.Text = "1 Cards";
                 gameDeckCountLabel.Text = "35 Cards";
                 makeMoveButton.Visible = false;
+                selfreplaybutton.Visible = false;
                 FalseRecord.Visible = false;
                 MakeClaim.Visible = true; MakeClaim.Enabled = false;
                 StartGameButton.Visible = false;
@@ -484,6 +601,7 @@ namespace CheatGameApp
                 oppDeckLabel.Visible = false;
                 CallCheatButton.Visible = false;
                 StartGameButton.Visible = true;
+                selfreplaybutton.Visible = true;
                 makeMoveButton.Visible = false;
                 FalseRecord.Visible = false;
                 MakeClaim.Visible = false;
@@ -735,8 +853,6 @@ namespace CheatGameApp
             _tcpConnection[connIndex].Send(new MoveMessage(move));
             //remove replay button if was visable
             replay.Visible = false;
-
-
     }
 
         private void StartGameButton_Click(object sender, EventArgs e)
@@ -802,7 +918,7 @@ namespace CheatGameApp
 
     private void replay_Click(object sender, EventArgs e)
     {
-      Playrecording();
+      Playrecording(recived_wave_stream);
     }
 
     private void myDeck_Load(object sender, EventArgs e)
@@ -818,9 +934,10 @@ namespace CheatGameApp
                highClaimOptionDeck.Visible = (myDeck.Deck.Count != 0);
 
       myDeck.SelectClick = false;
-      makeMoveButton.Visible = FalseRecord.Visible = true;
-      makeMoveButton.Enabled = false;
+      makeMoveButton.Visible = FalseRecord.Visible = selfreplaybutton.Visible = true;
+      makeMoveButton.Enabled = MakeClaim.Enabled = false;
       FalseRecord.Enabled = true;
+      selfreplaybutton.Enabled = true;
      }
 
     private void FalseRecord_Click(object sender, EventArgs e)
@@ -829,5 +946,25 @@ namespace CheatGameApp
       else forfeitGame();
       
     }
-  }
+
+    private void   selfReplayButton_Click(object sender, EventArgs e)
+    {
+           Playrecording(claim_record);
+    }
+
+    private void hearedLowbutton_Click(object sender, EventArgs e)
+    {
+        verifyClaim(lowclaimhear.Deck);
+    }
+
+    private void hearedHighbutton_Click(object sender, EventArgs e)
+    {
+        verifyClaim(highclaimhear.Deck);
+    }
+
+    private void hearednothing_Click(object sender, EventArgs e)
+    {
+        verifyClaim(new Deck());
+    }
+    }
 }
