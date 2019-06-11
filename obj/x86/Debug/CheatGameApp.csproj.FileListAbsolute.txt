@@ -1,0 +1,119 @@
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.Cache
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\bin\Debug\CheatGameApp.exe
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\bin\Debug\CheatGameApp.pdb
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+D:\User\user\Documents\Dropbox\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojResolveAssemblyReference.cache
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\bin\Debug\CheatGameApp.exe
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\bin\Debug\CheatGameApp.pdb
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojResolveAssemblyReference.cache
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.Cache
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.DemographicsForm.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.VideoForm.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.Video.WebCamCapture.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.WaitForm.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\bin\Debug\CheatGameApp.exe.manifest
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\bin\Debug\CheatGameApp.application
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.exe.manifest
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\CheatGameApp\CheatGameApp\obj\x86\Debug\CheatGameApp.application
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.exe.manifest
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.application
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.exe
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.pdb
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojResolveAssemblyReference.cache
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.DemographicsForm.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.VideoForm.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.Video.WebCamCapture.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.WaitForm.resources
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.Cache
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.exe.manifest
+C:\Users\amirgott\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.application
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.exe.manifest
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.application
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.exe
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\bin\Debug\CheatGameApp.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.DemographicsForm.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.VideoForm.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.Video.WebCamCapture.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.WaitForm.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.Cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.exe.manifest
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient\CheatGameApp\obj\x86\Debug\CheatGameApp.application
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\bin\Debug\CheatGameApp.exe.manifest
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\bin\Debug\CheatGameApp.application
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\bin\Debug\CheatGameApp.exe
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\bin\Debug\CheatGameApp.pdb
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojResolveAssemblyReference.cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.DemographicsForm.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.VideoForm.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.Video.WebCamCapture.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.WaitForm.resources
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.Cache
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.exe.manifest
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.application
+C:\Users\user\Documents\Visual Studio 2010\Projects\LiarClient - Copy\CheatGameApp\obj\x86\Debug\CheatGameApp.UnitTest.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.DemographicsForm.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.UnitTest.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.VideoForm.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.Video.WebCamCapture.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.WaitForm.resources
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.cache
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.CoreCompileInputs.cache
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojAssemblyReference.cache
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\bin\Debug\CheatGameApp.exe.manifest
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\bin\Debug\CheatGameApp.application
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\bin\Debug\CheatGameApp.exe
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\bin\Debug\CheatGameApp.pdb
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.exe.manifest
+C:\Users\neite\OneDrive\Documents\לימודים\CheatGameApp\obj\x86\Debug\CheatGameApp.application
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\bin\Debug\CheatGameApp.exe.manifest
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\bin\Debug\CheatGameApp.application
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\bin\Debug\CheatGameApp.exe
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\bin\Debug\CheatGameApp.pdb
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\bin\Debug\NAudio.dll
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\bin\Debug\NAudio.xml
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.csprojAssemblyReference.cache
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.CardLabel.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.DemographicsForm.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.Form1.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.Properties.Resources.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.UnitTest.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.VideoForm.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.Video.WebCamCapture.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.WaitForm.resources
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.GenerateResource.cache
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.CoreCompileInputs.cache
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.exe.manifest
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.application
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.csproj.CopyComplete
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.exe
+C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\obj\x86\Debug\CheatGameApp.pdb

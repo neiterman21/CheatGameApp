@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6D0B7C67-3D5E-4342-9C26-D61A919AA8FC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CheatGameApp</RootNamespace>
+    <AssemblyName>CheatGameApp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>\\NETBOOK-AMIR\Dnetbook\Liar\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>0804E4937F14F3E47F3826BA03AFEF8D4359405C</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>CheatGameApp_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FaceSDK.NET, Version=4.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\FaceSDK.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=1.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NAudio.1.8.5\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DeckLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DeckLabel.Designer.cs">
+      <DependentUpon>DeckLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Demographics.cs" />
+    <Compile Include="DemographicsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DemographicsForm.designer.cs">
+      <DependentUpon>DemographicsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Enumarations\Counties.cs" />
+    <Compile Include="Enumarations\EducationFields.cs" />
+    <Compile Include="Enumarations\EducationType.cs" />
+    <Compile Include="Enumarations\Genders.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="JpegEncoding.cs" />
+    <Compile Include="Model\Card.cs" />
+    <Compile Include="CardLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CardLabel.Designer.cs">
+      <DependentUpon>CardLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\CardType.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Deck.cs" />
+    <Compile Include="Model\DeckEventArgs.cs" />
+    <Compile Include="Model\MathHelper.cs" />
+    <Compile Include="Network\Client.cs" />
+    <Compile Include="Network\IPEndPointParser.cs" />
+    <Compile Include="Network\Messages\AudioMessage.cs" />
+    <Compile Include="Network\Messages\BoardMessage.cs" />
+    <Compile Include="Network\Messages\ControlMessage.cs" />
+    <Compile Include="Network\Messages\DemographicsMessage.cs" />
+    <Compile Include="Network\Messages\JpgMessage.cs" />
+    <Compile Include="Network\Messages\Message.cs" />
+    <Compile Include="Network\Messages\MessageEventArg.cs" />
+    <Compile Include="Network\Messages\MoveMessage.cs" />
+    <Compile Include="Network\TcpConnectionBase.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeStamper.cs" />
+    <Compile Include="UnitTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UnitTest.Designer.cs">
+      <DependentUpon>UnitTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Video\AsyncVideoProcessor.cs" />
+    <Compile Include="Video\Multithreading\FeatureExtractionTask.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Video\Multithreading\ITask.cs" />
+    <Compile Include="Video\Multithreading\SaveImageTask.cs" />
+    <Compile Include="Video\Multithreading\TaskManager.cs" />
+    <Compile Include="Video\Multithreading\TaskResult.cs" />
+    <Compile Include="Video\Multithreading\TaskResults.cs" />
+    <Compile Include="Video\MutilMediaTimer.cs" />
+    <Compile Include="Video\VideoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Video\VideoForm.Designer.cs">
+      <DependentUpon>VideoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Video\WebCamAPI.cs" />
+    <Compile Include="Video\WebCamCapture.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Video\WebcamEventArgs.cs" />
+    <Compile Include="WaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitForm.designer.cs">
+      <DependentUpon>WaitForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CardLabel.resx">
+      <DependentUpon>CardLabel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DemographicsForm.resx">
+      <DependentUpon>DemographicsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="UnitTest.resx">
+      <DependentUpon>UnitTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Video\VideoForm.resx">
+      <DependentUpon>VideoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Video\WebCamCapture.resx">
+      <DependentUpon>WebCamCapture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WaitForm.resx">
+      <DependentUpon>WaitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="CheatGameApp_TemporaryKey.pfx" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\cards.png" />
+    <None Include="Resources\cheatGameDesign.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\blankTV.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
