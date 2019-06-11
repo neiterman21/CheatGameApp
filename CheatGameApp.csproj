@@ -13,20 +13,22 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\NETBOOK-AMIR\Dnetbook\Liar\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Unc</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <HockeyAppResourceId>52bb7676d7af41b9b68cd1c275cad413</HockeyAppResourceId>
+    <PublishUrl>C:\Users\neite\OneDrive\Documents\לימודים\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://localhost:8080/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -53,13 +55,14 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ManifestCertificateThumbprint>0804E4937F14F3E47F3826BA03AFEF8D4359405C</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>F9E454CBCB9FEB67E64D084648E998E370A64A7C</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>CheatGameApp_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -67,8 +70,18 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>CheatGameApp_1_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FaceSDK.NET, Version=4.0.0.0, Culture=neutral, processorArchitecture=x86">
@@ -77,6 +90,8 @@
     </Reference>
     <Reference Include="NAudio, Version=1.8.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NAudio.1.8.5\lib\net35\NAudio.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -108,6 +123,12 @@
     <Compile Include="Enumarations\EducationType.cs" />
     <Compile Include="Enumarations\Genders.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
     <Compile Include="JpegEncoding.cs" />
     <Compile Include="Model\Card.cs" />
     <Compile Include="CardLabel.cs">
@@ -175,12 +196,16 @@
     </Compile>
     <EmbeddedResource Include="CardLabel.resx">
       <DependentUpon>CardLabel.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DemographicsForm.resx">
       <DependentUpon>DemographicsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -204,8 +229,13 @@
     <EmbeddedResource Include="WaitForm.resx">
       <DependentUpon>WaitForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="CheatGameApp_1_TemporaryKey.pfx" />
     <None Include="CheatGameApp_TemporaryKey.pfx" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -232,7 +262,7 @@
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
+      <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
@@ -244,6 +274,18 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="NAudio">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

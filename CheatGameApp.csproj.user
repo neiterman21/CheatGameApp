@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>\\NETBOOK-AMIR\Dnetbook\Liar\|C:\Liar\|publish\</PublishUrlHistory>
-    <InstallUrlHistory />
+    <PublishUrlHistory>C:\Users\neite\OneDrive\Documents\לימודים\|\\NETBOOK-AMIR\Dnetbook\Liar\|C:\Liar\|publish\</PublishUrlHistory>
+    <InstallUrlHistory>http://localhost:8080/</InstallUrlHistory>
     <SupportUrlHistory />
     <UpdateUrlHistory />
     <BootstrapperUrlHistory />
     <ErrorReportUrlHistory />
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
-    <ProjectView>ShowAllFiles</ProjectView>
+    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup>
     <EnableSecurityDebugging>false</EnableSecurityDebugging>

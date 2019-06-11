@@ -30,6 +30,7 @@ namespace CheatGameModel.Network
         public override void Dispose()
         {
             m_tcpClient.Close();
+            m_socket.Close();
             //m_tcpClient.Client.Dispose();            
         }
         private void OnConnect(IAsyncResult result)

@@ -59,6 +59,7 @@ namespace CheatGameModel.Network.Messages
         public string LastClaimPlayerName { get; set; }
 
         public bool IsRevealing { get; set; }
+        public bool CanDispute { get; set; }
         public string UsedCardsNumbers { get; set; }
 
         public int Ace { get; set; }

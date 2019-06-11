@@ -13,7 +13,8 @@ namespace CheatGameModel.Network.Messages
     {
         Start = 0,  // 'Start' is also sent by the client to notify pressing the start button
         Tick = 1,
-        End = 2
+        End = 2,
+        Report = 4,
     }
 
     public sealed class ControlMessage : Message

@@ -72,8 +72,15 @@ namespace CheatGameApp
             audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
         //send demographics to opponent
             _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
+            FormClosing += new FormClosingEventHandler(CheatGame_Closing);
+
 
             //InitGUI();
+        }
+
+        void CheatGame_Closing(object sender, FormClosingEventArgs e)
+        {
+            _tcpConnection[connIndex].Dispose();
         }
 
         //private void InitGUI()
@@ -90,20 +97,15 @@ namespace CheatGameApp
         //    }
         //}
 
-        private static int _camImageWidth;
-        private static int _camImageHeight;
-
         private static void LoadParams()
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(_paramsFileName);
+            //  XmlDocument doc = new XmlDocument();
+            // doc.Load(_paramsFileName);
 
-            _camIndex = doc.GetParamInt32("CAM_INDEX");
-            _camFrameRate = doc.GetParamInt32("CAM_FRAME_RATE");
-            _camImageWidth = doc.GetParamInt32("CAM_IMAGE_WIDTH");
-            _camImageHeight = doc.GetParamInt32("CAM_IMAGE_HEIGHT");
 
-            _rootDir = doc.GetParamString("ROOT_DIR");
+
+            // _rootDir = doc.GetParamString("ROOT_DIR");
+            _rootDir = "c:\\CheatGameLogs";
             if (_rootDir != "")
                 Directory.CreateDirectory(_rootDir);
 
@@ -111,8 +113,13 @@ namespace CheatGameApp
             string tcpConn = "Client";
             if (!string.IsNullOrEmpty(tcpConn))
             {
-                string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
-                string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
+                //string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
+                //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
+                //string SERVER_ENDPOINT = "18.224.93.57";
+                //string CLIENT_ENDPOINT = "18.224.93.57";
+
+                string SERVER_ENDPOINT = "127.0.0.1";
+                string CLIENT_ENDPOINT = "127.0.0.1";
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -202,7 +209,6 @@ namespace CheatGameApp
                 lowClaimOptionDeck.Visible = highClaimOptionDeck.Visible = false;
 
                 msgLabel.Text = string.IsNullOrEmpty(myBoard.BoardMsg) ? string.Empty : myBoard.BoardMsg;
-
                 // update the decks on the formas the board data in the message indicates
                 UpdateMyDeck(myBoard.GetCards());
                 myDeck.SelectNone();
@@ -254,6 +260,21 @@ namespace CheatGameApp
                EnterVerifiyClaimState();
 
             }
+        }
+
+        void DisputeFalseRecordClaim()
+        {         
+            Form2 disput_form = new Form2(claim_record, lastClaimDeckLabel);
+            disput_form.ShowDialog();
+           
+            if (DialogResult.Yes == disput_form.DialogResult) OpenDispute();
+            return;
+
+        }
+
+        private void OpenDispute()
+        {
+            _tcpConnection[connIndex].Send(new ControlMessage( ControlCommandType.Report));
         }
 
         private void EnableVerifiyClaimbuttons()
@@ -423,7 +444,7 @@ namespace CheatGameApp
 
                 Card previusclaimcard = new Card(lastClaimDeckLabel.Deck.GetCounts());
 
-                for (int i = 0; i < lastClaimCount ; i++) //we already have 1 card in the decks
+                for (int i = 0; i < lastClaimCount ; i++) 
                 {
                     low_claim_option_deck.Add(previusclaimcard.Decrease());
                     high_claim_option_deck.Add(previusclaimcard.Increase());
@@ -623,7 +644,7 @@ namespace CheatGameApp
             }
 
             bool isRevealing = myBoard.IsRevealing;
-
+            if (myBoard.CanDispute) DisputeFalseRecordClaim();
             // reveal is requested
             if (isRevealing && !allClaimsDeckLabel.FacingUp)// this.usedCardLabel1.Card.Type == CardType.Deck)
             {
