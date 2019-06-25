@@ -44,6 +44,7 @@ namespace CheatGameApp
         public static int _camFrameRate;
 
         public const int NUM_PLAYERS = 2;
+        public static int game_num = 1;
 
         public Form1()
         {
@@ -375,24 +376,10 @@ namespace CheatGameApp
             return demographics;
         }
 
-
-        protected void ShowVideoForm()
-        {
-            _videoCapture = new VideoForm(_camImageWidth, _camImageHeight, _tcpConnection[connIndex], cameraIndex: 0,
-                                          saveAndProcessImages: false);
-            _videoCapture.CaptureFrameRate = 24;
-
-            _videoCapture.StartPosition = FormStartPosition.Manual;
-            _videoCapture.Location = System.Drawing.Point.Empty;
-            _videoCapture.Shown += new EventHandler(OnVideoCapture_Shown);
-            _videoCapture.Show();
-        }
-
         protected void OnVideoCapture_Shown(object sender, EventArgs e)
         {
             _videoCapture.Location = System.Drawing.Point.Empty;
         }
-
 
         #region Board Message Processing 
 
@@ -634,6 +621,8 @@ namespace CheatGameApp
                 gameDeckCountLabel.Text = "35 Cards";
                 StatusLabel.Visible = true;
                 StatusLabel.Text = myBoard.BoardMsg;
+                game_num++;
+                gamesCountLabel.Text = game_num.ToString() + " of 3";
 
                 timeLabel.Visible = false;
                 turnLabel.Visible = false;
