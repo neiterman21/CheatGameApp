@@ -15,16 +15,27 @@ namespace CheatGameModel.Network.Messages
         Tick = 1,
         End = 2,
         Report = 4,
-    }
+        EndMatch = 5,
+        OpponentDisconected =6,
+  }
 
     public sealed class ControlMessage : Message
     {
         public ControlCommandType Commmand { get; set; }
+        public string msg { get; set; }
 
         public ControlMessage(ControlCommandType Commmand)
-            : base()
+        : base()
         {
             this.Commmand = Commmand;
+            this.msg = string.Empty;
+        }
+
+        public ControlMessage(ControlCommandType Commmand , string _msg)
+        : base()
+        {
+            this.Commmand = Commmand;
+            this.msg = _msg;
         }
 
         public ControlMessage(XmlDocument xml)

@@ -55,7 +55,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ManifestCertificateThumbprint>F9E454CBCB9FEB67E64D084648E998E370A64A7C</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>4816CA82D551A28BC311812CFC595409E3041C46</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>
@@ -65,7 +65,7 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />

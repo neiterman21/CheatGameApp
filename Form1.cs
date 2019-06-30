@@ -167,7 +167,8 @@ namespace CheatGameApp
                     _needToClose = true;
                 }
                 connIndex = 1;
-            }                
+            }
+           
         }
         protected void OnPlaybackStopped(object obj , StoppedEventArgs e) 
         {
@@ -259,10 +260,35 @@ namespace CheatGameApp
                replay.Visible = true;
 
                EnterVerifiyClaimState();
-
+            }
+            if (e.Message is ControlMessage)
+            {
+               ControlMessage message = e.Message as ControlMessage;
+                if (message.Commmand == ControlCommandType.EndMatch)
+                    ShowEndGameMessage(message.msg);
+                if (message.Commmand == ControlCommandType.OpponentDisconected)
+                    ShowOpponentDisconectedMessage(message.msg);
             }
         }
+        public void ShowEndGameMessage(string msg)
+        {
+            string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " + msg;
+            MessageBox.Show(massage);
+        }
 
+        public void ShowOpponentDisconectedMessage(string msg)
+        {
+            if (game_num - 1 == 0)
+            {
+              string massage = "Unfortunatly your opponent disconected before compleating a single game.\n you may run the game again and find a different opponent. \n you will not be paid for an uncompleat game";
+              MessageBox.Show(massage);
+            }
+            else
+            {
+              string massage = "Unfortunatly your opponent disconected. \n you have compleated: " + (game_num - 1) + " games. you will be paid for the games to compleated. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " + msg;
+              MessageBox.Show(massage);
+            }
+        }
         void DisputeFalseRecordClaim()
         {         
             Form2 disput_form = new Form2(claim_record, lastClaimDeckLabel);
@@ -609,7 +635,7 @@ namespace CheatGameApp
                 oppDeckLabel.Visible = false;
                 CallCheatButton.Visible = false;
                 StartGameButton.Visible = true;
-                selfreplaybutton.Visible = true;
+                selfreplaybutton.Visible = false;
                 makeMoveButton.Visible = false;
                 FalseRecord.Visible = false;
                 MakeClaim.Visible = false;
