@@ -178,7 +178,7 @@ namespace CheatGameApp
           using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
           {
             record_strem.Position = 0;
-            waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs                    >(OnPlaybackStopped);
+            waveOut.PlaybackStopped += new EventHandler<StoppedEventArgs>(OnPlaybackStopped);
             waveOut.Init(record_strem);
             waveOut.Play();
             while (waveOut.PlaybackState == PlaybackState.Playing)
@@ -190,6 +190,7 @@ namespace CheatGameApp
 
         protected void OnTcpConnection_MessageReceived(object sender, MessageEventArg e)
         {
+            Console.WriteLine("got message ");
             //thread safe
             if (InvokeRequired)
             {

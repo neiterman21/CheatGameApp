@@ -17,6 +17,7 @@ namespace CheatGameModel.Network
         public abstract void SetIPEndPoints(string serverIPEndPoint, string ClientIPEndPoint);
 
         public event EventHandler Started;
+        public static int conectionnumber = 0;
         protected void RaiseStarted()
         {
             IsStarted = true;
@@ -30,6 +31,7 @@ namespace CheatGameModel.Network
         {
             if (MessageReceived == null)
                 return;
+            Console.Write("raising event for con num= " + conectionnumber + "\n");
             MessageReceived(this, new MessageEventArg(message));
         }
         
@@ -74,12 +76,14 @@ namespace CheatGameModel.Network
         {
             try
             {
+        
                 int count = m_socket.EndReceive(result);           
                 byte[] incomingMsg = new byte[count];
                 Buffer.BlockCopy(m_buffer, 0, incomingMsg, 0, count);
 
                 if (m_messageBuffer.Count > 0)
                 {
+                    
                     int copyLength = Math.Min(Message.EOM.Length - 1, m_messageBuffer.Count);
                     byte[] temp = new byte[incomingMsg.Length + copyLength];
 

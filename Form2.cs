@@ -17,12 +17,12 @@ namespace CheatGameApp
         {
             InitializeComponent();
             my_claim.Deck = lastClaimDeckLabel.Deck;
+            my_claim.Visible = true;
             my_record_strem = _record_strem;
             
         }
         protected void OnPlaybackStopped(object obj, StoppedEventArgs e)
         {
-            Playrecording(my_record_strem);
         }
 
         protected void Playrecording(WaveStream record_strem)
@@ -65,5 +65,10 @@ namespace CheatGameApp
         {
             return need_to_report;
         }
+
+    private void Replay_button_Click(object sender, EventArgs e)
+    {
+      Playrecording(my_record_strem);
     }
+  }
 }

@@ -48,6 +48,7 @@ namespace CheatGameModel.Network
             m_socket.NoDelay = true;
             BeginReceive();
             RaiseStarted();
+            conectionnumber++;
         }
 
         public override IAsyncResult BeginStart()
