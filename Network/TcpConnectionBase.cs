@@ -258,8 +258,13 @@ namespace CheatGameModel.Network
                     m_socket.BeginSend(paddedMessageBytes, 0, paddedMessageBytes.Length, SocketFlags.None, null, null);
                     Console.WriteLine("sending " + paddedMessageBytes.Length);
                     //File.AppendAllText("C:\\Liar\\log.txt", "after send " + message.Type + Environment.NewLine);
-                }
-           
+                } 
+        }
+
+        public void Send()
+        {
+          byte[] tmp = new byte[1];
+          m_socket.Send(tmp, 0, 0);
         }
         public abstract void Dispose();
     }

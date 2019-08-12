@@ -45,6 +45,10 @@ namespace CheatGameApp
 
         public const int NUM_PLAYERS = 2;
         public static int game_num = 1;
+        public static int TrunTime = 50;
+        private TimeSpan m_gameTime;
+        private bool no_response_prev_round = false;
+        private BoardState Board = new BoardState();
 
         public Form1()
         {
@@ -60,43 +64,37 @@ namespace CheatGameApp
             if (_needToClose)  // raised on unsuccessful TCP connect attempt
             {
                 Application.Exit();
+                Close();
             }
 
             // Start Video Capture
             // ShowVideoForm();
 
             //show demographics dialog
+            if (!ShowsoundTestForm()) Close();
             _demographics = ShowDemographicsForm();
 
             //configure audio capture
             audioRecordTimer.Interval = 4000;
             audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
-        //send demographics to opponent
+           //send demographics to opponent
             _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
             FormClosing += new FormClosingEventHandler(CheatGame_Closing);
-
-
-            //InitGUI();
+            Thread conectivity_check = new Thread(ConectivityCheck);
+           // conectivity_check.Start();
         }
-
+        public void ConectivityCheck()
+        {
+          while (true)
+          {
+            _tcpConnection[connIndex].Send();
+            Thread.Sleep(3000);
+          }
+        }
         void CheatGame_Closing(object sender, FormClosingEventArgs e)
         {
             _tcpConnection[connIndex].Dispose();
         }
-
-        //private void InitGUI()
-        //{
-        //    UnrevealCards (allCardsInGroupBox: mainDeckGroupBox);
-        //    UnrevealCards (allCardsInGroupBox: usedDeckGroupBox);
-        //}
-
-        //private void UnrevealCards(GroupBox allCardsInGroupBox)
-        //{
-        //    foreach (CardLabel cardLabel in allCardsInGroupBox.Controls)
-        //    {
-        //        cardLabel.Card = Card.EmptyDeck;
-        //    }
-        //}
 
         private static void LoadParams()
         {
@@ -118,9 +116,10 @@ namespace CheatGameApp
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
                 //string SERVER_ENDPOINT = "18.224.93.57";
                 //string CLIENT_ENDPOINT = "18.224.93.57";
-
-                string SERVER_ENDPOINT = "127.0.0.1";
-                string CLIENT_ENDPOINT = "127.0.0.1";
+                string SERVER_ENDPOINT = "18.221.184.12";
+                string CLIENT_ENDPOINT = "18.221.184.12";
+                //string SERVER_ENDPOINT = "127.0.0.1";
+                //string CLIENT_ENDPOINT = "127.0.0.1";
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -203,7 +202,8 @@ namespace CheatGameApp
                 // get the board data from the message
                 BoardMessage message = e.Message as BoardMessage;
                 BoardState myBoard = message.GetBoardState();
-
+                Board = myBoard;
+                m_gameTime = TimeSpan.FromSeconds(TrunTime);
                 allClaimsDeckLabel.Deck = new Deck();
                 allClaimsDeckLabel.FacingUp = false;
                 makeMoveButton.Visible = false;
@@ -269,7 +269,9 @@ namespace CheatGameApp
                     ShowEndGameMessage(message.msg);
                 if (message.Commmand == ControlCommandType.OpponentDisconected)
                     ShowOpponentDisconectedMessage(message.msg);
-            }
+                if (message.Commmand == ControlCommandType.Tick)
+                    _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.Tick));
+      }
         }
         public void ShowEndGameMessage(string msg)
         {
@@ -353,6 +355,7 @@ namespace CheatGameApp
         {
             DisableVerifiyClaimbuttons();
             EnableNonVerifiyClaimbuttons();
+            m_gameTime = TimeSpan.FromSeconds(TrunTime);
         }
 
         protected void verifyClaim(Deck heared)
@@ -392,6 +395,15 @@ namespace CheatGameApp
                 EnterVerifiyClaimState();
                 return false;
             }
+        }
+
+        protected bool ShowsoundTestForm()
+        {
+          soundTestForm soundTestForm_ = new soundTestForm();
+          soundTestForm_.ShowDialog();
+
+          bool isok = soundTestForm_.isTestPassed();
+          return isok;
         }
 
         protected Demographics ShowDemographicsForm()
@@ -591,7 +603,7 @@ namespace CheatGameApp
                 // hide waiting message
                 StatusLabel.Visible = false;
 
-                m_gameTime = TimeSpan.Zero;
+                m_gameTime = TimeSpan.FromSeconds(TrunTime);
                 gameTimer.Start();
 
                 // show board
@@ -619,7 +631,7 @@ namespace CheatGameApp
                 gamesCountLabel.Visible = true;
                 recordingLable.Visible = false;
                 replay.Visible = false;
-                timeLabel.Text = "00:00:00";
+                timeLabel.Text = "00:00:40";
                 return;
             }
 
@@ -872,6 +884,7 @@ namespace CheatGameApp
 
         private void OnMakeMoveButton_Click(object sender, EventArgs e)
         {
+            m_gameTime = TimeSpan.FromSeconds(TrunTime/3);
             // get the turn's move
             int[] realMove;
             int[] claimMove;
@@ -910,7 +923,7 @@ namespace CheatGameApp
             }));
             //remove replay button if was visable
             replay.Visible = false;
-    } // NOTE: MoveTime may not be used on the server side due to clock differences
+        } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         private void CallCheatButton_Click(object sender, EventArgs e)
         {
@@ -919,7 +932,7 @@ namespace CheatGameApp
             }));
             //remove replay button if was visable
             replay.Visible = false;
-    } // NOTE: MoveTime may not be used on the server side due to clock differences
+        } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         protected override void OnClosed(EventArgs e)
         {
@@ -941,16 +954,24 @@ namespace CheatGameApp
             //CallCheatButton.Enabled = false;
         }
 
-        private TimeSpan m_gameTime;
+        
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            m_gameTime += TimeSpan.FromMilliseconds(gameTimer.Interval);
+            m_gameTime -= TimeSpan.FromMilliseconds(gameTimer.Interval);
             timeLabel.Text = string.Format("{0:00}:{1:00}:{2:00}", m_gameTime.Hours, m_gameTime.Minutes, m_gameTime.Seconds);
+            if (m_gameTime <= TimeSpan.Zero && ! Board.IsServerTurn ) time_up();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void time_up()
         {
-
+          if (no_response_prev_round)
+          {
+            forfeitGame();
+            Thread.Sleep(2000);        
+            Application.Exit();
+          }
+          no_response_prev_round = true;
+          TakeCardButton_Click(this, null);
         }
 
     private void replay_Click(object sender, EventArgs e)
