@@ -48,6 +48,8 @@ namespace CheatGameApp
         public static int TrunTime = 50;
         private TimeSpan m_gameTime;
         private bool no_response_prev_round = false;
+        public static int connIndex;
+        private static bool _needToClose = false;
         private BoardState Board = new BoardState();
 
         public Form1()
@@ -61,19 +63,15 @@ namespace CheatGameApp
             //connect to server
             TCPConnect();
 
+            //show demographics dialog
+            //if (!_needToClose) ShowsoundTestForm();
+            if (!_needToClose) _demographics = ShowDemographicsForm();
+
             if (_needToClose)  // raised on unsuccessful TCP connect attempt
             {
-                Application.Exit();
-                Close();
+              Application.Exit();
+              Close();
             }
-
-            // Start Video Capture
-            // ShowVideoForm();
-
-            //show demographics dialog
-            if (!ShowsoundTestForm()) Close();
-            _demographics = ShowDemographicsForm();
-
             //configure audio capture
             audioRecordTimer.Interval = 4000;
             audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
@@ -116,10 +114,10 @@ namespace CheatGameApp
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
                 //string SERVER_ENDPOINT = "18.224.93.57";
                 //string CLIENT_ENDPOINT = "18.224.93.57";
-                string SERVER_ENDPOINT = "18.221.184.12";
-                string CLIENT_ENDPOINT = "18.221.184.12";
-                //string SERVER_ENDPOINT = "127.0.0.1";
-                //string CLIENT_ENDPOINT = "127.0.0.1";
+                //string SERVER_ENDPOINT = "18.221.184.12";
+                //string CLIENT_ENDPOINT = "18.221.184.12";
+                string SERVER_ENDPOINT = "127.0.0.1";
+                string CLIENT_ENDPOINT = "127.0.0.1";
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -136,8 +134,7 @@ namespace CheatGameApp
             this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
             this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
         }
-        public static int connIndex;
-        private static bool _needToClose = false;
+
         protected void TCPConnect()
         {
             bool conn0Successful;
@@ -311,20 +308,14 @@ namespace CheatGameApp
         {
             highclaimhear.Visible = true;
             lowclaimhear.Visible = true;
-            hearedHighbutton.Visible = true;
-            hearedLowbutton.Visible = true;
             hearednothing.Visible = true;
             replay.Visible = true;
-            hearedHighbutton.BringToFront();
-            hearedLowbutton.BringToFront();
         }
 
         private void DisableVerifiyClaimbuttons()
         {
             highclaimhear.Visible = false;
             lowclaimhear.Visible = false;
-            hearedHighbutton.Visible = false;
-            hearedLowbutton.Visible = false;
             hearednothing.Visible = false;
         }
 
@@ -397,13 +388,13 @@ namespace CheatGameApp
             }
         }
 
-        protected bool ShowsoundTestForm()
+        protected void ShowsoundTestForm()
         {
           soundTestForm soundTestForm_ = new soundTestForm();
           soundTestForm_.ShowDialog();
 
-          bool isok = soundTestForm_.isTestPassed();
-          return isok;
+          _needToClose = _needToClose || (!soundTestForm_.isTestPassed());
+          return ;
         }
 
         protected Demographics ShowDemographicsForm()
@@ -639,6 +630,11 @@ namespace CheatGameApp
             if (!StartGameButton.Visible && !startButtonPressed)
             {
                 // hide board
+
+                foreach (Control component in Controls)
+                {
+                  component.Visible = false;
+                }
                 myDeck.Visible = false;
                 TakeCardButton.Visible = false;
                 oppCardsCountLabel.Visible = false;
@@ -1004,25 +1000,33 @@ namespace CheatGameApp
       else forfeitGame();
       
     }
-
+    
     private void   selfReplayButton_Click(object sender, EventArgs e)
     {
            Playrecording(claim_record);
-    }
-
-    private void hearedLowbutton_Click(object sender, EventArgs e)
-    {
-        verifyClaim(lowclaimhear.Deck);
-    }
-
-    private void hearedHighbutton_Click(object sender, EventArgs e)
-    {
-        verifyClaim(highclaimhear.Deck);
     }
 
     private void hearednothing_Click(object sender, EventArgs e)
     {
         verifyClaim(new Deck());
     }
+
+    private void highclaimhear_SelectionChanged(object sender, DeckEventArgs e)
+    {
+      highclaimhear.SupressSelectionChanged();
+      highclaimhear.SelectNone();
+      lowclaimhear.SelectNone();
+      verifyClaim(highclaimhear.Deck);
+      highclaimhear.ResumeSelectionChanged();
     }
+
+    private void lowclaimhear_SelectionChanged(object sender, DeckEventArgs e)
+    {
+      lowclaimhear.SupressSelectionChanged();
+      lowclaimhear.SelectNone();
+      highclaimhear.SelectNone();
+      verifyClaim(lowclaimhear.Deck);
+      lowclaimhear.ResumeSelectionChanged();
+    }
+  }
 }

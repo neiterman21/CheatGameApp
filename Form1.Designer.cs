@@ -57,8 +57,6 @@
       this.selfreplaybutton = new System.Windows.Forms.Button();
       this.lowclaimhear = new CheatGameApp.DeckLabel();
       this.highclaimhear = new CheatGameApp.DeckLabel();
-      this.hearedLowbutton = new System.Windows.Forms.Button();
-      this.hearedHighbutton = new System.Windows.Forms.Button();
       this.hearednothing = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
@@ -168,11 +166,11 @@
       // msgLabel
       // 
       this.msgLabel.BackColor = System.Drawing.Color.Transparent;
-      this.msgLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+      this.msgLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
       this.msgLabel.ForeColor = System.Drawing.Color.White;
-      this.msgLabel.Location = new System.Drawing.Point(57, 383);
+      this.msgLabel.Location = new System.Drawing.Point(29, 383);
       this.msgLabel.Name = "msgLabel";
-      this.msgLabel.Size = new System.Drawing.Size(536, 24);
+      this.msgLabel.Size = new System.Drawing.Size(610, 24);
       this.msgLabel.TabIndex = 12;
       this.msgLabel.Text = "messages to player";
       this.msgLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -374,46 +372,26 @@
       this.lowclaimhear.BackColor = System.Drawing.Color.Transparent;
       this.lowclaimhear.CardSize = new System.Drawing.Size(55, 76);
       this.lowclaimhear.DeckCards = "0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0";
-      this.lowclaimhear.Location = new System.Drawing.Point(283, 206);
+      this.lowclaimhear.Location = new System.Drawing.Point(273, 206);
       this.lowclaimhear.Name = "lowclaimhear";
-      this.lowclaimhear.Size = new System.Drawing.Size(80, 131);
+      this.lowclaimhear.SelectClick = true;
+      this.lowclaimhear.Size = new System.Drawing.Size(56, 122);
       this.lowclaimhear.TabIndex = 19;
       this.lowclaimhear.Visible = false;
-      this.lowclaimhear.Click += new System.EventHandler(this.hearedLowbutton_Click);
+      this.lowclaimhear.SelectionChanged += new System.EventHandler<CheatGameApp.Model.DeckEventArgs>(this.lowclaimhear_SelectionChanged);
       // 
       // highclaimhear
       // 
       this.highclaimhear.BackColor = System.Drawing.Color.Transparent;
       this.highclaimhear.CardSize = new System.Drawing.Size(55, 76);
       this.highclaimhear.DeckCards = "0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0";
-      this.highclaimhear.Location = new System.Drawing.Point(512, 206);
+      this.highclaimhear.Location = new System.Drawing.Point(533, 206);
       this.highclaimhear.Name = "highclaimhear";
-      this.highclaimhear.Size = new System.Drawing.Size(80, 134);
+      this.highclaimhear.SelectClick = true;
+      this.highclaimhear.Size = new System.Drawing.Size(60, 122);
       this.highclaimhear.TabIndex = 20;
       this.highclaimhear.Visible = false;
-      this.highclaimhear.Click += new System.EventHandler(this.hearedHighbutton_Click);
-      // 
-      // hearedLowbutton
-      // 
-      this.hearedLowbutton.Location = new System.Drawing.Point(282, 324);
-      this.hearedLowbutton.Name = "hearedLowbutton";
-      this.hearedLowbutton.Size = new System.Drawing.Size(81, 30);
-      this.hearedLowbutton.TabIndex = 21;
-      this.hearedLowbutton.Text = "heared low";
-      this.hearedLowbutton.UseVisualStyleBackColor = true;
-      this.hearedLowbutton.Visible = false;
-      this.hearedLowbutton.Click += new System.EventHandler(this.hearedLowbutton_Click);
-      // 
-      // hearedHighbutton
-      // 
-      this.hearedHighbutton.Location = new System.Drawing.Point(512, 324);
-      this.hearedHighbutton.Name = "hearedHighbutton";
-      this.hearedHighbutton.Size = new System.Drawing.Size(81, 30);
-      this.hearedHighbutton.TabIndex = 22;
-      this.hearedHighbutton.Text = "heared high";
-      this.hearedHighbutton.UseVisualStyleBackColor = true;
-      this.hearedHighbutton.Visible = false;
-      this.hearedHighbutton.Click += new System.EventHandler(this.hearedHighbutton_Click);
+      this.highclaimhear.SelectionChanged += new System.EventHandler<CheatGameApp.Model.DeckEventArgs>(this.highclaimhear_SelectionChanged);
       // 
       // hearednothing
       // 
@@ -434,8 +412,6 @@
       this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
       this.ClientSize = new System.Drawing.Size(916, 625);
       this.Controls.Add(this.hearednothing);
-      this.Controls.Add(this.hearedHighbutton);
-      this.Controls.Add(this.hearedLowbutton);
       this.Controls.Add(this.highclaimhear);
       this.Controls.Add(this.lowclaimhear);
       this.Controls.Add(this.selfreplaybutton);
@@ -504,8 +480,6 @@
         private System.Windows.Forms.Button selfreplaybutton;
         private DeckLabel lowclaimhear;
         private DeckLabel highclaimhear;
-        private System.Windows.Forms.Button hearedLowbutton;
-        private System.Windows.Forms.Button hearedHighbutton;
         private System.Windows.Forms.Button hearednothing;
     }
 }
