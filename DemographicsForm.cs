@@ -27,16 +27,11 @@ namespace CheatGameApp
             genderComboBox.DataSource = Enum.GetValues(typeof(Genders));
             countryOfBirthComboBox.DataSource = Enum.GetValues(typeof(Counties));
             countryOfBirthComboBox.BindingContext = new BindingContext();
-            parentsCountryOfBirthComboBox.DataSource = Enum.GetValues(typeof(Counties));
-            parentsCountryOfBirthComboBox.BindingContext = new BindingContext();
 
             educationTypeComboBox.DataSource = Enum.GetValues(typeof(EducationType));
-            educationFieldComboBox.DataSource = Enum.GetValues(typeof(EducationFields));
 
             countryOfBirthComboBox.SelectedIndex = m_israelIndex;
-            parentsCountryOfBirthComboBox.SelectedIndex = -1;
             educationTypeComboBox.SelectedIndex = -1;
-            educationFieldComboBox.SelectedIndex = -1;
             genderComboBox.SelectedIndex = -1;
         }
 
@@ -48,11 +43,8 @@ namespace CheatGameApp
             d.Gender = (Genders)genderComboBox.SelectedValue;
 
             d.CountryOfBirth = (Counties)countryOfBirthComboBox.SelectedValue;
-            if (d.CountryOfBirth == Counties.Israel)
-                d.ParentsCountryOfBirth = (Counties)parentsCountryOfBirthComboBox.SelectedValue;
 
             d.EducationType = (EducationType)educationTypeComboBox.SelectedValue;
-            d.EducationField = (EducationFields)educationFieldComboBox.SelectedValue;
             d.IsStudent = isStudentCheckBox.Checked;
 
             return d;
@@ -72,11 +64,7 @@ namespace CheatGameApp
         private void countryOfBirthComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             bool isFromIsrael = (Counties)countryOfBirthComboBox.SelectedValue == Counties.Israel;
-            parentsCountryOfBirthComboBox.Enabled =
-                parentsCountryOfBirthLabel.Enabled = isFromIsrael;
 
-            if (!isFromIsrael)
-                parentsCountryOfBirthComboBox.SelectedIndex = -1;
         }
 
         private void submitButton_Click(object sender, EventArgs e)
@@ -95,10 +83,6 @@ namespace CheatGameApp
                 errorSB.AppendLine("Please fill in Country of Birth.");
 
             object country = countryOfBirthComboBox.SelectedValue;
-            if (country != null && (Counties)country == Counties.Israel && parentsCountryOfBirthComboBox.SelectedIndex < 0)
-                errorSB.AppendLine("Please fill in Parent's Country of Birth.");
-            if (educationFieldComboBox.SelectedIndex < 0)
-                errorSB.AppendLine("Please fill Education.");
 
             if (educationTypeComboBox.SelectedIndex < 0)
                 errorSB.AppendLine("Please fill in Education Field.");
