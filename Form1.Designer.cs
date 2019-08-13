@@ -77,7 +77,7 @@
       this.TakeCardButton.Name = "TakeCardButton";
       this.TakeCardButton.Size = new System.Drawing.Size(96, 30);
       this.TakeCardButton.TabIndex = 7;
-      this.TakeCardButton.Text = "Take A Card";
+      this.TakeCardButton.Text = "Take 3 Cards";
       this.TakeCardButton.UseVisualStyleBackColor = true;
       this.TakeCardButton.Visible = false;
       this.TakeCardButton.Click += new System.EventHandler(this.TakeCardButton_Click);
