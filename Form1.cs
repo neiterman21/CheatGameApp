@@ -236,16 +236,20 @@ namespace CheatGameApp
                 if (!string.IsNullOrEmpty(myBoard.PlayerMsg) && myBoard.IsServerTurn)
                 {
                     //select the single card that we got from the main deck after pressing the take card button
-                    int takenCard = int.Parse(myBoard.PlayerMsg);
+                    string[] cardes_taken = myBoard.PlayerMsg.Split(',');
                     myDeck.SupressSelectionChanged();
                     myDeck.SelectNone();
-                    foreach (CardLabel cardLabel in myDeck.Controls)
+                    foreach (string card_str in cardes_taken)
                     {
-                        if (cardLabel.Card.Number != takenCard)
+                        int takenCard = int.Parse(card_str);
+                        foreach (CardLabel cardLabel in myDeck.Controls)
+                        {
+                          if (cardLabel.Card.Number != takenCard || cardLabel.Selected)
                             continue;
-                        
-                        cardLabel.Selected = true;
-                        break;
+                    
+                          cardLabel.Selected = true;
+                          break;
+                        }
                     }
                     myDeck.ResumeSelectionChanged();
                 }
@@ -270,24 +274,29 @@ namespace CheatGameApp
                     _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.Tick));
       }
         }
-        public void ShowEndGameMessage(string msg)
+        public void ShowEndGameMessage(string code)
         {
-            string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " + msg;
-            MessageBox.Show(massage);
+            string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n ";
+            EndgameForm eg = new EndgameForm(massage , code);
+            eg.Show();
+            hideAllComponents();
         }
 
-        public void ShowOpponentDisconectedMessage(string msg)
+        public void ShowOpponentDisconectedMessage(string code)
         {
+            string massage;
             if (game_num - 1 == 0)
             {
-              string massage = "Unfortunatly your opponent disconected before compleating a single game.\n you may run the game again and find a different opponent. \n you will not be paid for an uncompleat game";
-              MessageBox.Show(massage);
+              massage = "Unfortunatly your opponent disconected before compleating a single game.\n you may run the game again and find a different opponent. \n you will not be paid for an uncompleat game";
+              code = "";
             }
             else
             {
-              string massage = "Unfortunatly your opponent disconected. \n you have compleated: " + (game_num - 1) + " games. you will be paid for the games to compleated. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " + msg;
-              MessageBox.Show(massage);
+              massage = "Unfortunatly your opponent disconected. \n you have compleated: " + (game_num - 1) + " games. you will be paid for the games to compleated. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " ;
             }
+            EndgameForm eg = new EndgameForm(massage,code);
+            eg.Show();
+            hideAllComponents();
         }
         void DisputeFalseRecordClaim()
         {         
@@ -572,6 +581,14 @@ namespace CheatGameApp
             
         }
 
+        protected void hideAllComponents()
+        {
+          foreach (Control component in Controls)
+          {
+            component.Visible = false;
+          }
+        }
+
         private void ControlOfGameStates(BoardState myBoard)
         {
             bool startButtonPressed = myBoard.AgentStartPressed; 
@@ -629,12 +646,9 @@ namespace CheatGameApp
             // end of game
             if (!StartGameButton.Visible && !startButtonPressed)
             {
-                // hide board
+        // hide board
 
-                foreach (Control component in Controls)
-                {
-                  component.Visible = false;
-                }
+                hideAllComponents();
                 myDeck.Visible = false;
                 TakeCardButton.Visible = false;
                 oppCardsCountLabel.Visible = false;
