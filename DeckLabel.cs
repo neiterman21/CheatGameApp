@@ -199,7 +199,7 @@ namespace CheatGameApp
                 //m_cardLabels.Clear();
                 if (m_style != LayoutStyle.Horizontal)
                     m_deck.Sort();
-                var cardsByNumber = m_deck.ToDictionary();
+                var cardsByNumber = m_deck.ToReducedList();
 
                 if (m_cardLabels.Count > m_deck.Count)
                 {
@@ -221,7 +221,7 @@ namespace CheatGameApp
                     foreach (var cards in cardsByNumber)
                     {
                         //for each card
-                        for (int i = cards.Value.Count - 1; i >= 0; i--)
+                        for (int i = cards.Count - 1; i >= 0; i--)
                         {
 
                             CardLabel cardLabel;
@@ -241,7 +241,7 @@ namespace CheatGameApp
                             cardsCount++;
 
                             cardLabel.AutoSize = false;
-                            cardLabel.Card = cards.Value[i];
+                            cardLabel.Card = cards[i];
                             cardLabel.SelectClick = this.SelectClick;
                             cardLabel.FacingUp = m_facingUp;
                             cardLabel.Tag = new Point(xOffset, i);

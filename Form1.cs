@@ -56,30 +56,51 @@ namespace CheatGameApp
         {
             InitializeComponent();
           
-            this.DoubleBuffered = true;
+            this.DoubleBuffered = true;          
+        }
 
-            LoadParams();
+        private void Form1_Load(object sender, EventArgs e)
+        {
+          LoadParams();
 
-            //connect to server
-            TCPConnect();
+          //connect to server
+          TCPConnect();
 
-            //show demographics dialog
-            //if (!_needToClose) ShowsoundTestForm();
-            if (!_needToClose) _demographics = ShowDemographicsForm();
+          //show demographics dialog
+          //if (!_needToClose) ShowsoundTestForm();
+          if (!_needToClose) _demographics = ShowDemographicsForm();
 
-            if (_needToClose)  // raised on unsuccessful TCP connect attempt
-            {
-              Application.Exit();
-              Close();
-            }
-            //configure audio capture
-            audioRecordTimer.Interval = 4000;
-            audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
-           //send demographics to opponent
-            _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
-            FormClosing += new FormClosingEventHandler(CheatGame_Closing);
-            Thread conectivity_check = new Thread(ConectivityCheck);
-           // conectivity_check.Start();
+          if (_needToClose)  // raised on unsuccessful TCP connect attempt
+          {
+            Application.Exit();
+            Close();
+          }
+          //configure audio capture
+          audioRecordTimer.Interval = 4000;
+          audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
+          //send demographics to opponent
+          _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
+          FormClosing += new FormClosingEventHandler(CheatGame_Closing);
+          Thread conectivity_check = new Thread(ConectivityCheck);
+          addActivitydetection();
+
+          // conectivity_check.Start();
+        }
+
+        private void addActivitydetection()
+        {
+          foreach (Control component in Controls)
+          {
+             if(component is Button)
+             {
+                Button b = (Button)component;
+                b.Click += new System.EventHandler(this.ActivityDetection);
+        }
+          }
+        }
+        public void ActivityDetection(object sender, EventArgs e)
+        {
+          no_response_prev_round = false;
         }
         public void ConectivityCheck()
         {
@@ -114,10 +135,10 @@ namespace CheatGameApp
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
                 //string SERVER_ENDPOINT = "18.224.93.57";
                 //string CLIENT_ENDPOINT = "18.224.93.57";
-                //string SERVER_ENDPOINT = "18.221.184.12";
-                //string CLIENT_ENDPOINT = "18.221.184.12";
-                string SERVER_ENDPOINT = "127.0.0.1";
-                string CLIENT_ENDPOINT = "127.0.0.1";
+                string SERVER_ENDPOINT = "18.221.184.12";
+                string CLIENT_ENDPOINT = "18.221.184.12";
+                //string SERVER_ENDPOINT = "127.0.0.1";
+                //string CLIENT_ENDPOINT = "127.0.0.1";
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -166,6 +187,12 @@ namespace CheatGameApp
             }
            
         }
+        protected void playWelcomeMessagse()
+        {
+          WaveStream WelcomeRecording = new RawSourceWaveStream(CheatGameApp.Properties.Resources.Welcome1, new WaveFormat(48000, 2));
+          Playrecording(WelcomeRecording);
+        }
+
         protected void OnPlaybackStopped(object obj , StoppedEventArgs e) 
         {
         }
@@ -186,7 +213,6 @@ namespace CheatGameApp
 
         protected void OnTcpConnection_MessageReceived(object sender, MessageEventArg e)
         {
-            Console.WriteLine("got message ");
             //thread safe
             if (InvokeRequired)
             {
@@ -301,7 +327,7 @@ namespace CheatGameApp
         void DisputeFalseRecordClaim()
         {         
             Form2 disput_form = new Form2(claim_record, lastClaimDeckLabel);
-            disput_form.ShowDialog();
+            disput_form.ShowDialog(this);
            
             if (DialogResult.Yes == disput_form.DialogResult) OpenDispute();
             return;
@@ -600,6 +626,7 @@ namespace CheatGameApp
                 StatusLabel.Visible = true;
                 StatusLabel.Text = "Please wait for other players to join the game.";
                 StartGameButton.Visible = false;
+       // debugfunc();
                 return;
             }
 
@@ -608,6 +635,7 @@ namespace CheatGameApp
             // other user has joined
             if (startButtonPressed && StatusLabel.Visible)
             {
+                playWelcomeMessagse();
                 // hide waiting message
                 StatusLabel.Visible = false;
 
@@ -641,7 +669,7 @@ namespace CheatGameApp
                 replay.Visible = false;
                 timeLabel.Text = "00:00:40";
                 return;
-            }
+                }
 
             // end of game
             if (!StartGameButton.Visible && !startButtonPressed)
@@ -682,7 +710,7 @@ namespace CheatGameApp
             }
 
             bool isRevealing = myBoard.IsRevealing;
-            if (myBoard.CanDispute) DisputeFalseRecordClaim();
+
             // reveal is requested
             if (isRevealing && !allClaimsDeckLabel.FacingUp)// this.usedCardLabel1.Card.Type == CardType.Deck)
             {
@@ -705,12 +733,13 @@ namespace CheatGameApp
                 //usedCardLabel1.Text = "";
 
                 Deck revealDeck = new Deck();
+                
                 foreach (var cardString in cardsToTurnOver)
                 {
                     Card card = new Card(int.Parse(cardString), CardType.Heart);
                     revealDeck.Add(card);
                 }
-                
+
                 allClaimsDeckLabel.Deck = revealDeck;
                 allClaimsDeckLabel.FacingUp = true;
 
@@ -725,6 +754,7 @@ namespace CheatGameApp
             }
 
             ControlOfNormalGameState(isMyTurn);
+            if (myBoard.CanDispute) DisputeFalseRecordClaim();
         }
 
         //private Timer WakeUpToCardsUnreveal = new Timer();
@@ -894,7 +924,6 @@ namespace CheatGameApp
 
         private void OnMakeMoveButton_Click(object sender, EventArgs e)
         {
-            m_gameTime = TimeSpan.FromSeconds(TrunTime/3);
             // get the turn's move
             int[] realMove;
             int[] claimMove;
@@ -977,6 +1006,7 @@ namespace CheatGameApp
           if (no_response_prev_round)
           {
             forfeitGame();
+            MessageBox.Show("You where unactive for too long. Please reopen the aplication to play again.");
             Thread.Sleep(2000);        
             Application.Exit();
           }
@@ -996,6 +1026,7 @@ namespace CheatGameApp
 
     private void MakeClaim_Click(object sender, EventArgs e)
     {
+      m_gameTime = TimeSpan.FromSeconds(TrunTime / 2);
       claim_record  = CaptureAudio();
       isRecordingEvent.Reset();
       lowClaimOptionDeck.Visible =
@@ -1042,5 +1073,7 @@ namespace CheatGameApp
       verifyClaim(lowclaimhear.Deck);
       lowclaimhear.ResumeSelectionChanged();
     }
+
+
   }
 }

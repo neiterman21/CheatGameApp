@@ -73,6 +73,7 @@ namespace CheatGameApp
     public WaveStream CaptureAudio()
     {
       //Console.WriteLine("Now recording...");
+      
       waveSource = new WaveIn();
       waveSource.WaveFormat = new WaveFormat(16000, 1);
 
@@ -82,9 +83,9 @@ namespace CheatGameApp
       ws = new MemoryStream();
       waveFile = new WaveFileWriter(new IgnoreDisposeStream(ws), waveSource.WaveFormat);
 
-      Thread recordingThread = new Thread(waveSource.StartRecording);
+      Thread recordingThread = new Thread(waveSource.StartRecording); 
       recordingThread.Start();
-
+      recordingLable.Visible = true;
       audioRecordTimer.Start();
       audioRecordTimer.Enabled = true;
       while (!isRecordingEvent.WaitOne(200))
@@ -93,6 +94,7 @@ namespace CheatGameApp
         // this works but you better raise an event
         Application.DoEvents();
       }
+      recordingLable.Visible = false;
       return new RawSourceWaveStream(ws, new WaveFormat(16000, 1));
     }
 

@@ -31,7 +31,7 @@ namespace CheatGameModel.Network
         {
             if (MessageReceived == null)
                 return;
-            Console.Write("raising event for con num= " + conectionnumber + "\n");
+            //Console.Write("raising event for con num= " + conectionnumber + "\n");
             MessageReceived(this, new MessageEventArg(message));
         }
         
@@ -238,7 +238,7 @@ namespace CheatGameModel.Network
         public void Send(Message message)
         {
             //get message bytes
-            Console.WriteLine("sending ");
+           // Console.WriteLine("sending ");
             byte[] messageBytes = message.GetBytes();
 
             //framed bytes
@@ -256,7 +256,7 @@ namespace CheatGameModel.Network
                 {
                     //File.AppendAllText("C:\\Liar\\log.txt", "before send " + message.Type + Environment.NewLine);
                     m_socket.BeginSend(paddedMessageBytes, 0, paddedMessageBytes.Length, SocketFlags.None, null, null);
-                    Console.WriteLine("sending " + paddedMessageBytes.Length);
+                    //Console.WriteLine("sending " + paddedMessageBytes.Length);
                     //File.AppendAllText("C:\\Liar\\log.txt", "after send " + message.Type + Environment.NewLine);
                 } 
         }

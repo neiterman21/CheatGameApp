@@ -440,11 +440,13 @@
       this.Controls.Add(this.highClaimOptionDeck);
       this.Controls.Add(this.lowClaimOptionDeck);
       this.DoubleBuffered = true;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "Form1";
       this.ShowIcon = false;
       this.Text = "Cheat Game";
+      this.Load += new System.EventHandler(this.Form1_Load);
       this.ResumeLayout(false);
       this.PerformLayout();
 

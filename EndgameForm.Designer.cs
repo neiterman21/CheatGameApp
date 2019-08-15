@@ -88,10 +88,12 @@
       // EndgameForm
       // 
       this.ClientSize = new System.Drawing.Size(647, 261);
+      this.ControlBox = false;
       this.Controls.Add(this.CloseButton);
       this.Controls.Add(this.CopyButton);
       this.Controls.Add(this.CodeLable);
       this.Controls.Add(this.MessageLable);
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
       this.Name = "EndgameForm";
       this.ResumeLayout(false);
       this.PerformLayout();

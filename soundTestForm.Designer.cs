@@ -33,6 +33,7 @@
       this.NoButton = new System.Windows.Forms.Button();
       this.questionLable = new System.Windows.Forms.Label();
       this.growLabel1 = new CheatGameApp.Model.GrowLabel();
+      this.recordingLable = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // Actionbutton
@@ -84,13 +85,27 @@
       this.growLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.growLabel1.Location = new System.Drawing.Point(31, 27);
       this.growLabel1.Name = "growLabel1";
-      this.growLabel1.Size = new System.Drawing.Size(407, 20);
+      this.growLabel1.Size = new System.Drawing.Size(413, 20);
       this.growLabel1.TabIndex = 8;
-      this.growLabel1.Text = "To check you headphone please play a shot message";
+      this.growLabel1.Text = "To check you headphone please play a short message";
+      // 
+      // recordingLable
+      // 
+      this.recordingLable.AutoSize = true;
+      this.recordingLable.BackColor = System.Drawing.SystemColors.HotTrack;
+      this.recordingLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.recordingLable.ForeColor = System.Drawing.SystemColors.ButtonFace;
+      this.recordingLable.Location = new System.Drawing.Point(147, 89);
+      this.recordingLable.Name = "recordingLable";
+      this.recordingLable.Size = new System.Drawing.Size(145, 32);
+      this.recordingLable.TabIndex = 15;
+      this.recordingLable.Text = "Recording";
+      this.recordingLable.Visible = false;
       // 
       // soundTestForm
       // 
       this.ClientSize = new System.Drawing.Size(472, 261);
+      this.Controls.Add(this.recordingLable);
       this.Controls.Add(this.growLabel1);
       this.Controls.Add(this.questionLable);
       this.Controls.Add(this.NoButton);
@@ -109,5 +124,6 @@
     private System.Windows.Forms.Button NoButton;
     private System.Windows.Forms.Label questionLable;
     private Model.GrowLabel growLabel1;
+    private System.Windows.Forms.Label recordingLable;
   }
 }

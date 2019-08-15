@@ -29,6 +29,22 @@ namespace CheatGameApp.Model
 
             return cardsByNumber;
         }
+
+        public List<List<Card>> ToReducedList()
+        {
+          List<List<Card>> cards = new List<List<Card>>();
+
+          foreach (var card in this)
+          {
+
+            if (cards.Count != 0 && card.Number == cards[cards.Count-1][0].Number)
+              cards[cards.Count - 1].Add(card);
+            else
+              cards.Add(new List<Card>() { card });
+          }
+
+          return cards;
+        }
         public bool CompareTo(Deck other)
         {
             if (other.Count > this.Count)
