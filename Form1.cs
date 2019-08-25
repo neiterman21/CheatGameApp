@@ -47,7 +47,7 @@ namespace CheatGameApp
         public static int game_num = 1;
         public static int TrunTime = 50;
         private TimeSpan m_gameTime;
-        private bool no_response_prev_round = false;
+        private int num_of_unresponsive_turnes = 0;
         public static int connIndex;
         private static bool _needToClose = false;
         private BoardState Board = new BoardState();
@@ -66,10 +66,18 @@ namespace CheatGameApp
           //connect to server
           TCPConnect();
 
-          //show demographics dialog
-          //if (!_needToClose) ShowsoundTestForm();
-          if (!_needToClose) _demographics = ShowDemographicsForm();
+      //show demographics dialog
+          try
+          {
 
+
+            if (!_needToClose) ShowsoundTestForm();
+            if (!_needToClose) _demographics = ShowDemographicsForm();
+          }
+          catch
+          {
+            _needToClose = true;
+          }
           if (_needToClose)  // raised on unsuccessful TCP connect attempt
           {
             Application.Exit();
@@ -100,7 +108,7 @@ namespace CheatGameApp
         }
         public void ActivityDetection(object sender, EventArgs e)
         {
-          no_response_prev_round = false;
+          num_of_unresponsive_turnes = 0;
         }
         public void ConectivityCheck()
         {
@@ -135,10 +143,10 @@ namespace CheatGameApp
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
                 //string SERVER_ENDPOINT = "18.224.93.57";
                 //string CLIENT_ENDPOINT = "18.224.93.57";
-                string SERVER_ENDPOINT = "18.221.184.12";
-                string CLIENT_ENDPOINT = "18.221.184.12";
-                //string SERVER_ENDPOINT = "127.0.0.1";
-                //string CLIENT_ENDPOINT = "127.0.0.1";
+                //string SERVER_ENDPOINT = "18.221.184.12";
+                //string CLIENT_ENDPOINT = "18.221.184.12";
+                string SERVER_ENDPOINT = "127.0.0.1";
+                string CLIENT_ENDPOINT = "127.0.0.1";
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -229,7 +237,6 @@ namespace CheatGameApp
                 m_gameTime = TimeSpan.FromSeconds(TrunTime);
                 allClaimsDeckLabel.Deck = new Deck();
                 allClaimsDeckLabel.FacingUp = false;
-                makeMoveButton.Visible = false;
                 FalseRecord.Visible = false;
                 selfreplaybutton.Visible = false;
                 lowClaimOptionDeck.Visible = highClaimOptionDeck.Visible = false;
@@ -303,9 +310,10 @@ namespace CheatGameApp
         public void ShowEndGameMessage(string code)
         {
             string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n ";
-            EndgameForm eg = new EndgameForm(massage , code);
-            eg.Show();
+            EndgameForm eg = new EndgameForm(massage , code); 
             hideAllComponents();
+            eg.ShowDialog();
+            this.Close();
         }
 
         public void ShowOpponentDisconectedMessage(string code)
@@ -321,9 +329,11 @@ namespace CheatGameApp
               massage = "Unfortunatly your opponent disconected. \n you have compleated: " + (game_num - 1) + " games. you will be paid for the games to compleated. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " ;
             }
             EndgameForm eg = new EndgameForm(massage,code);
-            eg.Show();
             hideAllComponents();
-        }
+            eg.ShowDialog();
+            this.Close();
+
+    }
         void DisputeFalseRecordClaim()
         {         
             Form2 disput_form = new Form2(claim_record, lastClaimDeckLabel);
@@ -590,7 +600,6 @@ namespace CheatGameApp
                 highClaimOptionDeck.SelectNone();
             }
 
-            makeMoveButton.Enabled = lowClaimOptionDeck.GetSelectedCards().Count > 0 || highClaimOptionDeck.GetSelectedCards().Count > 0;
             if ( count > 0 ) MakeClaim.Enabled = true;
             else MakeClaim.Enabled = false;
             lowClaimOptionDeck.ResumeSelectionChanged();
@@ -645,6 +654,7 @@ namespace CheatGameApp
                 // show board
                 myDeck.Visible = true;
                 TakeCardButton.Visible = true;
+                msgLabel.Visible = true;
                 oppCardsCountLabel.Visible = true;
                 gameDeckLabel.Visible = true;
                 allClaimsDeckLabel.Visible = true;
@@ -656,7 +666,6 @@ namespace CheatGameApp
 
                 allClaimsCountLabel.Text = "1 Cards";
                 gameDeckCountLabel.Text = "35 Cards";
-                makeMoveButton.Visible = false;
                 selfreplaybutton.Visible = false;
                 FalseRecord.Visible = false;
                 MakeClaim.Visible = true; MakeClaim.Enabled = false;
@@ -686,8 +695,8 @@ namespace CheatGameApp
                 oppDeckLabel.Visible = false;
                 CallCheatButton.Visible = false;
                 StartGameButton.Visible = true;
+                StartGameButton.Enabled = true;
                 selfreplaybutton.Visible = false;
-                makeMoveButton.Visible = false;
                 FalseRecord.Visible = false;
                 MakeClaim.Visible = false;
                 allClaimsCountLabel.Visible = false;
@@ -749,6 +758,7 @@ namespace CheatGameApp
                 }
 
                 turnOverCardsButton.Visible = true;
+                allClaimsCountLabel.Visible = false;
                 //SetCountDownTimer(time: 5);
                 return;
             }
@@ -783,7 +793,8 @@ namespace CheatGameApp
             {
                 // prepare the form to play the turn
                 myDeck.SelectClick = true;
-                turnLabel.Text = "Your";
+                turnLabel.Text = "Yours";
+                turnLabel.ForeColor = Color.Red;
                 UpdateClaimDecks(count: 0);
             }
             else
@@ -792,9 +803,10 @@ namespace CheatGameApp
                 myDeck.SelectClick = false;
                 myDeck.SelectNone(); 
                 turnLabel.Text = "Opponent";
+                turnLabel.ForeColor = Color.White;
                 //realMoveDeck.Deck = new Deck();
                 //claimPanel.Visible = false;
-            }
+      }
         }
 
         private void HandleLastClaimGroupBox(string cardLiteral, bool startButtonPressed)
@@ -839,7 +851,7 @@ namespace CheatGameApp
         {
             DeckLabel deck = sender as DeckLabel;
             DeckLabel otherDeck = deck == lowClaimOptionDeck ? highClaimOptionDeck : lowClaimOptionDeck;
-
+            FalseRecord.Visible = false;
             //unhook events to prevent recursive call
             deck.SupressSelectionChanged();
             otherDeck.SupressSelectionChanged();
@@ -850,11 +862,12 @@ namespace CheatGameApp
                 deck.SelectAll();
                 otherDeck.SelectNone();
             }
-            makeMoveButton.Enabled = deck.GetSelectedCards().Count > 0 || otherDeck.GetSelectedCards().Count > 0;
 
             //rehook events
             deck.ResumeSelectionChanged();
             otherDeck.ResumeSelectionChanged();
+
+            OnMakeMoveButton_Click(sender, null);
         }
 
         public WaveStream CaptureAudio()
@@ -951,7 +964,8 @@ namespace CheatGameApp
             }));
             //remove replay button if was visable
             replay.Visible = false;
-    } // NOTE: MoveTime may not be used on the server side due to clock differences
+            StartGameButton.Enabled = false;
+        } // NOTE: MoveTime may not be used on the server side due to clock differences
 
         #endregion Form Events
 
@@ -983,6 +997,7 @@ namespace CheatGameApp
         {
             _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.End));
             turnOverCardsButton.Visible = false;
+            allClaimsCountLabel.Visible = true;
             msgLabel.Text = "Please wait for other players to press the Turn Cards Over button";
            // StatusLabel.Visible = true;
             //allClaimsDeckLabel.Deck = new Deck();
@@ -999,19 +1014,27 @@ namespace CheatGameApp
             m_gameTime -= TimeSpan.FromMilliseconds(gameTimer.Interval);
             timeLabel.Text = string.Format("{0:00}:{1:00}:{2:00}", m_gameTime.Hours, m_gameTime.Minutes, m_gameTime.Seconds);
             if (m_gameTime <= TimeSpan.Zero && ! Board.IsServerTurn ) time_up();
+            if (m_gameTime <= TimeSpan.Zero) m_gameTime = TimeSpan.Zero;
         }
 
         private void time_up()
         {
-          if (no_response_prev_round)
+          num_of_unresponsive_turnes++;
+          if (num_of_unresponsive_turnes == 3)
           {
             forfeitGame();
             MessageBox.Show("You where unactive for too long. Please reopen the aplication to play again.");
             Thread.Sleep(2000);        
             Application.Exit();
           }
-          no_response_prev_round = true;
-          TakeCardButton_Click(this, null);
+          _tcpConnection[connIndex].Send(new MoveMessage(new Move
+          {
+            MoveType = MoveType.TimeUp,
+            MoveTime = TimeStamper.Time
+          }));
+          //remove replay button if was visable
+          replay.Visible = false;
+      
         }
 
     private void replay_Click(object sender, EventArgs e)
@@ -1033,9 +1056,8 @@ namespace CheatGameApp
                highClaimOptionDeck.Visible = (myDeck.Deck.Count != 0);
 
       myDeck.SelectClick = false;
-      makeMoveButton.Visible = FalseRecord.Visible = selfreplaybutton.Visible = true;
-      makeMoveButton.Enabled = MakeClaim.Enabled = false;
       FalseRecord.Enabled = true;
+      FalseRecord.Visible = true;
       selfreplaybutton.Enabled = true;
      }
 

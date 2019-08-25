@@ -32,8 +32,8 @@
       this.YesButton = new System.Windows.Forms.Button();
       this.NoButton = new System.Windows.Forms.Button();
       this.questionLable = new System.Windows.Forms.Label();
-      this.growLabel1 = new CheatGameApp.Model.GrowLabel();
       this.recordingLable = new System.Windows.Forms.Label();
+      this.growLabel1 = new CheatGameApp.Model.GrowLabel();
       this.SuspendLayout();
       // 
       // Actionbutton
@@ -79,16 +79,6 @@
       this.questionLable.TabIndex = 6;
       this.questionLable.Text = "Did you hear the message?";
       // 
-      // growLabel1
-      // 
-      this.growLabel1.AutoSize = true;
-      this.growLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.growLabel1.Location = new System.Drawing.Point(31, 27);
-      this.growLabel1.Name = "growLabel1";
-      this.growLabel1.Size = new System.Drawing.Size(413, 20);
-      this.growLabel1.TabIndex = 8;
-      this.growLabel1.Text = "To check you headphone please play a short message";
-      // 
       // recordingLable
       // 
       this.recordingLable.AutoSize = true;
@@ -102,6 +92,16 @@
       this.recordingLable.Text = "Recording";
       this.recordingLable.Visible = false;
       // 
+      // growLabel1
+      // 
+      this.growLabel1.AutoSize = true;
+      this.growLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.growLabel1.Location = new System.Drawing.Point(31, 27);
+      this.growLabel1.Name = "growLabel1";
+      this.growLabel1.Size = new System.Drawing.Size(413, 20);
+      this.growLabel1.TabIndex = 8;
+      this.growLabel1.Text = "To check you headphone please play a short message";
+      // 
       // soundTestForm
       // 
       this.ClientSize = new System.Drawing.Size(472, 261);
@@ -111,7 +111,10 @@
       this.Controls.Add(this.NoButton);
       this.Controls.Add(this.YesButton);
       this.Controls.Add(this.Actionbutton);
+      this.DoubleBuffered = true;
       this.Name = "soundTestForm";
+      this.ShowIcon = false;
+      this.Text = "Sound test";
       this.ResumeLayout(false);
       this.PerformLayout();
 

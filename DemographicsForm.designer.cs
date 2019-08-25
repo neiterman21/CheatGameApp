@@ -204,12 +204,8 @@
       this.Controls.Add(this.nameTextBox);
       this.Controls.Add(this.label1);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-      this.MaximizeBox = false;
-      this.MinimizeBox = false;
       this.Name = "DemographicsForm";
       this.Padding = new System.Windows.Forms.Padding(6);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
       this.Text = "Demographics";
       ((System.ComponentModel.ISupportInitialize)(this.ageNumericUpDown)).EndInit();

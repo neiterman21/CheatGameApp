@@ -28,18 +28,11 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.components = new System.ComponentModel.Container();
-      this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
       this.CodeLable = new System.Windows.Forms.Label();
-      this.MessageLable = new CheatGameApp.Model.GrowLabel();
       this.CopyButton = new System.Windows.Forms.Button();
       this.CloseButton = new System.Windows.Forms.Button();
+      this.MessageLable = new CheatGameApp.Model.GrowLabel();
       this.SuspendLayout();
-      // 
-      // notifyIcon1
-      // 
-      this.notifyIcon1.Text = "notifyIcon1";
-      this.notifyIcon1.Visible = true;
       // 
       // CodeLable
       // 
@@ -51,17 +44,6 @@
       this.CodeLable.Size = new System.Drawing.Size(53, 20);
       this.CodeLable.TabIndex = 1;
       this.CodeLable.Text = "label1";
-      // 
-      // MessageLable
-      // 
-      this.MessageLable.AutoSize = true;
-      this.MessageLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.MessageLable.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-      this.MessageLable.Location = new System.Drawing.Point(12, 9);
-      this.MessageLable.Name = "MessageLable";
-      this.MessageLable.Size = new System.Drawing.Size(95, 20);
-      this.MessageLable.TabIndex = 0;
-      this.MessageLable.Text = "growLabel1";
       // 
       // CopyButton
       // 
@@ -85,24 +67,36 @@
       this.CloseButton.Visible = false;
       this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
       // 
+      // MessageLable
+      // 
+      this.MessageLable.AutoSize = true;
+      this.MessageLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.MessageLable.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+      this.MessageLable.Location = new System.Drawing.Point(12, 9);
+      this.MessageLable.MaximumSize = new System.Drawing.Size(600, 0);
+      this.MessageLable.Name = "MessageLable";
+      this.MessageLable.Size = new System.Drawing.Size(95, 20);
+      this.MessageLable.TabIndex = 0;
+      this.MessageLable.Text = "growLabel1";
+      // 
       // EndgameForm
       // 
       this.ClientSize = new System.Drawing.Size(647, 261);
-      this.ControlBox = false;
       this.Controls.Add(this.CloseButton);
       this.Controls.Add(this.CopyButton);
       this.Controls.Add(this.CodeLable);
       this.Controls.Add(this.MessageLable);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+      this.MaximizeBox = false;
       this.Name = "EndgameForm";
+      this.ShowIcon = false;
+      this.TopMost = true;
       this.ResumeLayout(false);
       this.PerformLayout();
 
     }
 
     #endregion
-
-    private System.Windows.Forms.NotifyIcon notifyIcon1;
     private Model.GrowLabel MessageLable;
     private System.Windows.Forms.Label CodeLable;
     private System.Windows.Forms.Button CopyButton;

@@ -18,7 +18,8 @@ namespace CheatGameModel.Network.Messages
         StartPressed = 3,
         EndReveal = 4,
         ForfeitGame = 5,
-        CallCheatyOpponent = 6
+        CallCheatyOpponent = 6,
+        TimeUp = 7
     }
 
     public sealed class MoveMessage : Message

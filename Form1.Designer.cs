@@ -33,7 +33,6 @@
       this.TakeCardButton = new System.Windows.Forms.Button();
       this.CallCheatButton = new System.Windows.Forms.Button();
       this.StatusLabel = new System.Windows.Forms.Label();
-      this.makeMoveButton = new System.Windows.Forms.Button();
       this.gameDeckCountLabel = new System.Windows.Forms.Label();
       this.allClaimsCountLabel = new System.Windows.Forms.Label();
       this.oppCardsCountLabel = new System.Windows.Forms.Label();
@@ -105,17 +104,6 @@
       this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       this.StatusLabel.Visible = false;
       // 
-      // makeMoveButton
-      // 
-      this.makeMoveButton.Location = new System.Drawing.Point(645, 537);
-      this.makeMoveButton.Name = "makeMoveButton";
-      this.makeMoveButton.Size = new System.Drawing.Size(80, 30);
-      this.makeMoveButton.TabIndex = 7;
-      this.makeMoveButton.Text = "Send Move";
-      this.makeMoveButton.UseVisualStyleBackColor = true;
-      this.makeMoveButton.Visible = false;
-      this.makeMoveButton.Click += new System.EventHandler(this.OnMakeMoveButton_Click);
-      // 
       // gameDeckCountLabel
       // 
       this.gameDeckCountLabel.AutoSize = true;
@@ -154,7 +142,7 @@
       // 
       // turnOverCardsButton
       // 
-      this.turnOverCardsButton.Location = new System.Drawing.Point(384, 324);
+      this.turnOverCardsButton.Location = new System.Drawing.Point(394, 324);
       this.turnOverCardsButton.Name = "turnOverCardsButton";
       this.turnOverCardsButton.Size = new System.Drawing.Size(96, 30);
       this.turnOverCardsButton.TabIndex = 7;
@@ -168,9 +156,9 @@
       this.msgLabel.BackColor = System.Drawing.Color.Transparent;
       this.msgLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
       this.msgLabel.ForeColor = System.Drawing.Color.White;
-      this.msgLabel.Location = new System.Drawing.Point(29, 383);
+      this.msgLabel.Location = new System.Drawing.Point(29, 372);
       this.msgLabel.Name = "msgLabel";
-      this.msgLabel.Size = new System.Drawing.Size(610, 24);
+      this.msgLabel.Size = new System.Drawing.Size(610, 35);
       this.msgLabel.TabIndex = 12;
       this.msgLabel.Text = "messages to player";
       this.msgLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -205,7 +193,7 @@
       // 
       this.turnLabel.BackColor = System.Drawing.Color.Transparent;
       this.turnLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-      this.turnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+      this.turnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(177)));
       this.turnLabel.ForeColor = System.Drawing.Color.White;
       this.turnLabel.Location = new System.Drawing.Point(741, 128);
       this.turnLabel.Name = "turnLabel";
@@ -347,7 +335,7 @@
       // 
       // FalseRecord
       // 
-      this.FalseRecord.Location = new System.Drawing.Point(786, 531);
+      this.FalseRecord.Location = new System.Drawing.Point(712, 525);
       this.FalseRecord.Name = "FalseRecord";
       this.FalseRecord.Size = new System.Drawing.Size(85, 42);
       this.FalseRecord.TabIndex = 17;
@@ -427,7 +415,6 @@
       this.Controls.Add(this.allClaimsCountLabel);
       this.Controls.Add(this.gameDeckCountLabel);
       this.Controls.Add(this.StartGameButton);
-      this.Controls.Add(this.makeMoveButton);
       this.Controls.Add(this.CallCheatButton);
       this.Controls.Add(this.oppDeckLabel);
       this.Controls.Add(this.lastClaimDeckLabel);
@@ -465,7 +452,6 @@
         private DeckLabel oppDeckLabel;
         private DeckLabel allClaimsDeckLabel;
         private DeckLabel lastClaimDeckLabel;
-        private System.Windows.Forms.Button makeMoveButton;
         private System.Windows.Forms.Label gameDeckCountLabel;
         private System.Windows.Forms.Label allClaimsCountLabel;
         private System.Windows.Forms.Label oppCardsCountLabel;
