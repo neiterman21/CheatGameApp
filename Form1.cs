@@ -45,8 +45,10 @@ namespace CheatGameApp
 
         public const int NUM_PLAYERS = 2;
         public static int game_num = 1;
-        public static int TrunTime = 50;
+        public static int TrunTime = 50; //seconds  
+        public static int GameTime = 12; //minuts
         private TimeSpan m_gameTime;
+        private TimeSpan total_game_time;
         private int num_of_unresponsive_turnes = 0;
         public static int connIndex;
         private static bool _needToClose = false;
@@ -143,10 +145,10 @@ namespace CheatGameApp
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
                 //string SERVER_ENDPOINT = "18.224.93.57";
                 //string CLIENT_ENDPOINT = "18.224.93.57";
-                //string SERVER_ENDPOINT = "18.221.184.12";
-                //string CLIENT_ENDPOINT = "18.221.184.12";
-                string SERVER_ENDPOINT = "127.0.0.1";
-                string CLIENT_ENDPOINT = "127.0.0.1";
+                string SERVER_ENDPOINT = "18.221.184.12";
+                string CLIENT_ENDPOINT = "18.221.184.12";
+                //string SERVER_ENDPOINT = "127.0.0.1";
+                //string CLIENT_ENDPOINT = "127.0.0.1";
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -214,7 +216,7 @@ namespace CheatGameApp
             waveOut.Play();
             while (waveOut.PlaybackState == PlaybackState.Playing)
             {
-              System.Threading.Thread.Sleep(100);
+              Application.DoEvents();
             }
           }
         }
@@ -649,6 +651,7 @@ namespace CheatGameApp
                 StatusLabel.Visible = false;
 
                 m_gameTime = TimeSpan.FromSeconds(TrunTime);
+                total_game_time = TimeSpan.FromMinutes(GameTime);
                 gameTimer.Start();
 
                 // show board
@@ -672,6 +675,7 @@ namespace CheatGameApp
                 StartGameButton.Visible = false;
                 ControlOfNormalGameState(isMyTurn);
                 timeLabel.Visible = true;
+                TotaleTimeLable.Visible = true;
                 turnLabel.Visible = true;
                 gamesCountLabel.Visible = true;
                 recordingLable.Visible = false;
@@ -711,6 +715,7 @@ namespace CheatGameApp
                 gamesCountLabel.Text = game_num.ToString() + " of 3";
 
                 timeLabel.Visible = false;
+                TotaleTimeLable.Visible = false;
                 turnLabel.Visible = false;
                 gamesCountLabel.Visible = false;
                 replay.Visible = false;
@@ -1012,9 +1017,27 @@ namespace CheatGameApp
         private void gameTimer_Tick(object sender, EventArgs e)
         {
             m_gameTime -= TimeSpan.FromMilliseconds(gameTimer.Interval);
+            total_game_time -= TimeSpan.FromMilliseconds(gameTimer.Interval);
             timeLabel.Text = string.Format("{0:00}:{1:00}:{2:00}", m_gameTime.Hours, m_gameTime.Minutes, m_gameTime.Seconds);
+            TotaleTimeLable.Text = string.Format("{0:00}:{1:00}:{2:00}", total_game_time.Hours, total_game_time.Minutes, total_game_time.Seconds);
             if (m_gameTime <= TimeSpan.Zero && ! Board.IsServerTurn ) time_up();
             if (m_gameTime <= TimeSpan.Zero) m_gameTime = TimeSpan.Zero;
+            if (total_game_time <= TimeSpan.Zero) EndGameDueToTimeOut();
+        }
+
+        private void EndGameDueToTimeOut()
+        {
+          if((oppDeckLabel.Deck.Count < myDeck.Deck.Count) ||
+             (oppDeckLabel.Deck.Count == myDeck.Deck.Count && Board.IsServerTurn))
+          {
+            forfeitGame();
+            MessageBox.Show("Time for a single game has ended. You have lost because your opponent has less cards. ");
+          }
+          else
+          {
+            MessageBox.Show("Time for a single game has ended. You have won because you have less cards. ");
+
+          }
         }
 
         private void time_up()

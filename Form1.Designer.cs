@@ -57,6 +57,7 @@
       this.lowclaimhear = new CheatGameApp.DeckLabel();
       this.highclaimhear = new CheatGameApp.DeckLabel();
       this.hearednothing = new System.Windows.Forms.Button();
+      this.TotaleTimeLable = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // StartGameButton
@@ -169,7 +170,7 @@
       this.timeLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.timeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
       this.timeLabel.ForeColor = System.Drawing.Color.White;
-      this.timeLabel.Location = new System.Drawing.Point(741, 66);
+      this.timeLabel.Location = new System.Drawing.Point(755, 87);
       this.timeLabel.Name = "timeLabel";
       this.timeLabel.Size = new System.Drawing.Size(100, 23);
       this.timeLabel.TabIndex = 13;
@@ -182,7 +183,7 @@
       this.gamesCountLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.gamesCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
       this.gamesCountLabel.ForeColor = System.Drawing.Color.White;
-      this.gamesCountLabel.Location = new System.Drawing.Point(741, 97);
+      this.gamesCountLabel.Location = new System.Drawing.Point(755, 110);
       this.gamesCountLabel.Name = "gamesCountLabel";
       this.gamesCountLabel.Size = new System.Drawing.Size(100, 23);
       this.gamesCountLabel.TabIndex = 13;
@@ -195,7 +196,7 @@
       this.turnLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
       this.turnLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(177)));
       this.turnLabel.ForeColor = System.Drawing.Color.White;
-      this.turnLabel.Location = new System.Drawing.Point(741, 128);
+      this.turnLabel.Location = new System.Drawing.Point(755, 133);
       this.turnLabel.Name = "turnLabel";
       this.turnLabel.Size = new System.Drawing.Size(100, 23);
       this.turnLabel.TabIndex = 13;
@@ -392,6 +393,19 @@
       this.hearednothing.Visible = false;
       this.hearednothing.Click += new System.EventHandler(this.hearednothing_Click);
       // 
+      // TotaleTimeLable
+      // 
+      this.TotaleTimeLable.BackColor = System.Drawing.Color.Transparent;
+      this.TotaleTimeLable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.TotaleTimeLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+      this.TotaleTimeLable.ForeColor = System.Drawing.Color.White;
+      this.TotaleTimeLable.Location = new System.Drawing.Point(755, 64);
+      this.TotaleTimeLable.Name = "TotaleTimeLable";
+      this.TotaleTimeLable.Size = new System.Drawing.Size(100, 23);
+      this.TotaleTimeLable.TabIndex = 24;
+      this.TotaleTimeLable.Text = "00:00:00";
+      this.TotaleTimeLable.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -399,6 +413,7 @@
       this.BackgroundImage = global::CheatGameApp.Properties.Resources.cheatGameDesign;
       this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
       this.ClientSize = new System.Drawing.Size(916, 625);
+      this.Controls.Add(this.TotaleTimeLable);
       this.Controls.Add(this.hearednothing);
       this.Controls.Add(this.highclaimhear);
       this.Controls.Add(this.lowclaimhear);
@@ -469,6 +484,7 @@
         private DeckLabel lowclaimhear;
         private DeckLabel highclaimhear;
         private System.Windows.Forms.Button hearednothing;
-    }
+    private System.Windows.Forms.Label TotaleTimeLable;
+  }
 }
 
