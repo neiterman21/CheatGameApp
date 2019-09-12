@@ -48,6 +48,7 @@ namespace CheatGameApp
         public static int TrunTime = 50; //seconds  
         public static int GameTime = 12; //minuts
         private TimeSpan m_gameTime;
+        private bool endGame = false;
         private TimeSpan total_game_time;
         private int num_of_unresponsive_turnes = 0;
         public static int connIndex;
@@ -64,7 +65,7 @@ namespace CheatGameApp
         private void Form1_Load(object sender, EventArgs e)
         {
           LoadParams();
-
+          FormClosing += new FormClosingEventHandler(CheatGame_Closing);
           //connect to server
           TCPConnect();
 
@@ -90,11 +91,11 @@ namespace CheatGameApp
           audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
           //send demographics to opponent
           _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
-          FormClosing += new FormClosingEventHandler(CheatGame_Closing);
+          
           Thread conectivity_check = new Thread(ConectivityCheck);
           addActivitydetection();
 
-          // conectivity_check.Start();
+          conectivity_check.Start();
         }
 
         private void addActivitydetection()
@@ -111,10 +112,11 @@ namespace CheatGameApp
         public void ActivityDetection(object sender, EventArgs e)
         {
           num_of_unresponsive_turnes = 0;
+
         }
         public void ConectivityCheck()
         {
-          while (true)
+          while (!endGame)
           {
             _tcpConnection[connIndex].Send();
             Thread.Sleep(3000);
@@ -143,12 +145,12 @@ namespace CheatGameApp
             {
                 //string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
-                //string SERVER_ENDPOINT = "18.224.93.57";
-                //string CLIENT_ENDPOINT = "18.224.93.57";
-                string SERVER_ENDPOINT = "18.221.184.12";
-                string CLIENT_ENDPOINT = "18.221.184.12";
-                //string SERVER_ENDPOINT = "127.0.0.1";
-                //string CLIENT_ENDPOINT = "127.0.0.1";
+                //string SERVER_ENDPOINT = "18.191.185.56";  //fasr server
+                //string CLIENT_ENDPOINT = "18.191.185.56";  //fast server
+                //string SERVER_ENDPOINT = "18.221.184.12";  // slow server
+                //string CLIENT_ENDPOINT = "18.221.184.12";  // slow server
+                string SERVER_ENDPOINT = "127.0.0.1";        // local host
+                string CLIENT_ENDPOINT = "127.0.0.1";        // local host
                 for (var i = 0; i < NUM_PLAYERS; i++)
                 {
                     _tcpConnection[i] = new Client();
@@ -294,9 +296,11 @@ namespace CheatGameApp
                AudioMessage message = e.Message as AudioMessage;
                recived_wave_stream = message.GetRecording();
                Playrecording(recived_wave_stream);
-               replay.Visible = true;
-
-               EnterVerifiyClaimState();
+               if (lastClaimDeckLabel.Deck.Count != 0)
+               {
+                  replay.Visible = true;
+                  EnterVerifiyClaimState();
+               }
             }
             if (e.Message is ControlMessage)
             {
@@ -314,7 +318,8 @@ namespace CheatGameApp
             string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n ";
             EndgameForm eg = new EndgameForm(massage , code); 
             hideAllComponents();
-            eg.ShowDialog();
+            endGame = true;
+            DialogResult a  = eg.ShowDialog(this);         
             this.Close();
         }
 
@@ -332,7 +337,8 @@ namespace CheatGameApp
             }
             EndgameForm eg = new EndgameForm(massage,code);
             hideAllComponents();
-            eg.ShowDialog();
+            endGame = true;
+            DialogResult a = eg.ShowDialog(this);
             this.Close();
 
     }
@@ -373,6 +379,7 @@ namespace CheatGameApp
             TakeCardButton.Visible = false;
             MakeClaim.Visible = false;
             CallCheatButton.Visible = false;
+            myDeck.SelectClick = false; 
         }
 
         private void EnableNonVerifiyClaimbuttons()
@@ -382,7 +389,8 @@ namespace CheatGameApp
             TakeCardButton.Visible = true;
             MakeClaim.Visible = true;
             CallCheatButton.Visible = true;
-        }
+            myDeck.SelectClick = true;
+    }
         protected void EnterVerifiyClaimState()
         {
             EnableVerifiyClaimbuttons();
@@ -887,12 +895,13 @@ namespace CheatGameApp
             ws = new MemoryStream() ;
             waveFile = new WaveFileWriter(new IgnoreDisposeStream(ws), waveSource.WaveFormat);
 
-            recordingLable.Visible = true;
+            
             Thread recordingThread = new Thread(waveSource.StartRecording);
             recordingThread.Start();
 
             audioRecordTimer.Start();
             audioRecordTimer.Enabled = true;
+            recordingLable.Visible = true;
             while (!isRecordingEvent.WaitOne(200))
             {
                 // NAudio requires the windows message pump to be operational
@@ -1047,7 +1056,7 @@ namespace CheatGameApp
           {
             forfeitGame();
             MessageBox.Show("You where unactive for too long. Please reopen the aplication to play again.");
-            Thread.Sleep(2000);        
+            Thread.Sleep(60000);        
             Application.Exit();
           }
           _tcpConnection[connIndex].Send(new MoveMessage(new Move

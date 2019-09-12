@@ -39,9 +39,9 @@
       // Actionbutton
       // 
       this.Actionbutton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.Actionbutton.Location = new System.Drawing.Point(175, 70);
+      this.Actionbutton.Location = new System.Drawing.Point(291, 101);
       this.Actionbutton.Name = "Actionbutton";
-      this.Actionbutton.Size = new System.Drawing.Size(97, 38);
+      this.Actionbutton.Size = new System.Drawing.Size(103, 48);
       this.Actionbutton.TabIndex = 0;
       this.Actionbutton.Text = "play sound";
       this.Actionbutton.UseVisualStyleBackColor = true;
@@ -49,7 +49,7 @@
       // 
       // YesButton
       // 
-      this.YesButton.Location = new System.Drawing.Point(76, 179);
+      this.YesButton.Location = new System.Drawing.Point(118, 272);
       this.YesButton.Name = "YesButton";
       this.YesButton.Size = new System.Drawing.Size(88, 35);
       this.YesButton.TabIndex = 3;
@@ -60,7 +60,7 @@
       // 
       // NoButton
       // 
-      this.NoButton.Location = new System.Drawing.Point(324, 179);
+      this.NoButton.Location = new System.Drawing.Point(573, 272);
       this.NoButton.Name = "NoButton";
       this.NoButton.Size = new System.Drawing.Size(95, 35);
       this.NoButton.TabIndex = 4;
@@ -73,9 +73,9 @@
       // 
       this.questionLable.AutoSize = true;
       this.questionLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.questionLable.Location = new System.Drawing.Point(123, 142);
+      this.questionLable.Location = new System.Drawing.Point(212, 205);
       this.questionLable.Name = "questionLable";
-      this.questionLable.Size = new System.Drawing.Size(214, 20);
+      this.questionLable.Size = new System.Drawing.Size(323, 29);
       this.questionLable.TabIndex = 6;
       this.questionLable.Text = "Did you hear the message?";
       // 
@@ -85,9 +85,9 @@
       this.recordingLable.BackColor = System.Drawing.SystemColors.HotTrack;
       this.recordingLable.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.recordingLable.ForeColor = System.Drawing.SystemColors.ButtonFace;
-      this.recordingLable.Location = new System.Drawing.Point(147, 89);
+      this.recordingLable.Location = new System.Drawing.Point(242, 113);
       this.recordingLable.Name = "recordingLable";
-      this.recordingLable.Size = new System.Drawing.Size(145, 32);
+      this.recordingLable.Size = new System.Drawing.Size(210, 48);
       this.recordingLable.TabIndex = 15;
       this.recordingLable.Text = "Recording";
       this.recordingLable.Visible = false;
@@ -98,13 +98,13 @@
       this.growLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.growLabel1.Location = new System.Drawing.Point(31, 27);
       this.growLabel1.Name = "growLabel1";
-      this.growLabel1.Size = new System.Drawing.Size(413, 20);
+      this.growLabel1.Size = new System.Drawing.Size(628, 29);
       this.growLabel1.TabIndex = 8;
       this.growLabel1.Text = "To check you headphone please play a short message";
       // 
       // soundTestForm
       // 
-      this.ClientSize = new System.Drawing.Size(472, 261);
+      this.ClientSize = new System.Drawing.Size(755, 356);
       this.Controls.Add(this.recordingLable);
       this.Controls.Add(this.growLabel1);
       this.Controls.Add(this.questionLable);

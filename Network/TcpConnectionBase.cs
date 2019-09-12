@@ -46,9 +46,17 @@ namespace CheatGameModel.Network
         
         protected void BeginReceive()
         {
-            //if (m_socket.Connected)
-                m_socket.BeginReceive(m_buffer, 0, m_buffer.Length, SocketFlags.None, new AsyncCallback(AcceptBytes), null);
-        }
+          try
+          {
+            if (m_socket.Connected)
+              m_socket.BeginReceive(m_buffer, 0, m_buffer.Length, SocketFlags.None, new AsyncCallback(AcceptBytes), null);
+          }
+          catch (Exception ex)
+          {
+            string msg = "socket Error.  Error: " + ex.Message;
+            System.Diagnostics.Debug.WriteLine(msg);
+          }
+    }
 
         private int IndexOf(byte[] array, byte[] value)
         {
@@ -264,7 +272,15 @@ namespace CheatGameModel.Network
         public void Send()
         {
           byte[] tmp = new byte[1];
-          m_socket.Send(tmp, 0, 0);
+          try
+          {
+            m_socket.Send(tmp, 0, 0);
+          }
+          catch (Exception e)
+          {
+
+          }
+         
         }
         public abstract void Dispose();
     }

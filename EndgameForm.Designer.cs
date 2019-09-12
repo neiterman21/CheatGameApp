@@ -41,15 +41,15 @@
       this.CodeLable.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
       this.CodeLable.Location = new System.Drawing.Point(12, 169);
       this.CodeLable.Name = "CodeLable";
-      this.CodeLable.Size = new System.Drawing.Size(53, 20);
+      this.CodeLable.Size = new System.Drawing.Size(81, 29);
       this.CodeLable.TabIndex = 1;
       this.CodeLable.Text = "label1";
       // 
       // CopyButton
       // 
-      this.CopyButton.Location = new System.Drawing.Point(500, 164);
+      this.CopyButton.Location = new System.Drawing.Point(709, 164);
       this.CopyButton.Name = "CopyButton";
-      this.CopyButton.Size = new System.Drawing.Size(104, 25);
+      this.CopyButton.Size = new System.Drawing.Size(163, 34);
       this.CopyButton.TabIndex = 2;
       this.CopyButton.Text = "Copy to clipboard";
       this.CopyButton.UseVisualStyleBackColor = true;
@@ -58,9 +58,9 @@
       // 
       // CloseButton
       // 
-      this.CloseButton.Location = new System.Drawing.Point(279, 226);
+      this.CloseButton.Location = new System.Drawing.Point(408, 283);
       this.CloseButton.Name = "CloseButton";
-      this.CloseButton.Size = new System.Drawing.Size(75, 23);
+      this.CloseButton.Size = new System.Drawing.Size(106, 40);
       this.CloseButton.TabIndex = 3;
       this.CloseButton.Text = "Close";
       this.CloseButton.UseVisualStyleBackColor = true;
@@ -75,13 +75,13 @@
       this.MessageLable.Location = new System.Drawing.Point(12, 9);
       this.MessageLable.MaximumSize = new System.Drawing.Size(600, 0);
       this.MessageLable.Name = "MessageLable";
-      this.MessageLable.Size = new System.Drawing.Size(95, 20);
+      this.MessageLable.Size = new System.Drawing.Size(143, 29);
       this.MessageLable.TabIndex = 0;
       this.MessageLable.Text = "growLabel1";
       // 
       // EndgameForm
       // 
-      this.ClientSize = new System.Drawing.Size(647, 261);
+      this.ClientSize = new System.Drawing.Size(896, 352);
       this.Controls.Add(this.CloseButton);
       this.Controls.Add(this.CopyButton);
       this.Controls.Add(this.CodeLable);
