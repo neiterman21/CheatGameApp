@@ -14,7 +14,7 @@ namespace CheatGameApp
 {
     public partial class DemographicsForm : Form
     {
-        private int m_israelIndex = new ArrayList(Enum.GetValues(typeof(Counties))).IndexOf(Counties.Israel);
+        private int m_usIndex = new ArrayList(Enum.GetValues(typeof(Counties))).IndexOf(Counties.United_States);
         public DemographicsForm()
         {
             InitializeComponent();
@@ -30,7 +30,7 @@ namespace CheatGameApp
 
             educationTypeComboBox.DataSource = Enum.GetValues(typeof(EducationType));
 
-            countryOfBirthComboBox.SelectedIndex = m_israelIndex;
+            countryOfBirthComboBox.SelectedIndex = m_usIndex;
             educationTypeComboBox.SelectedIndex = -1;
             genderComboBox.SelectedIndex = -1;
         }

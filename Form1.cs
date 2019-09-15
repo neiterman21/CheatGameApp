@@ -68,8 +68,9 @@ namespace CheatGameApp
           FormClosing += new FormClosingEventHandler(CheatGame_Closing);
           //connect to server
           TCPConnect();
+          addActivitydetection();
 
-      //show demographics dialog
+          //show demographics dialog
           try
           {
 
@@ -92,10 +93,7 @@ namespace CheatGameApp
           //send demographics to opponent
           _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
           
-          Thread conectivity_check = new Thread(ConectivityCheck);
-          addActivitydetection();
-
-          conectivity_check.Start();
+          
         }
 
         private void addActivitydetection()
@@ -114,17 +112,11 @@ namespace CheatGameApp
           num_of_unresponsive_turnes = 0;
 
         }
-        public void ConectivityCheck()
-        {
-          while (!endGame)
-          {
-            _tcpConnection[connIndex].Send();
-            Thread.Sleep(3000);
-          }
-        }
+
         void CheatGame_Closing(object sender, FormClosingEventArgs e)
         {
             _tcpConnection[connIndex].Dispose();
+            Application.Exit();
         }
 
         private static void LoadParams()
@@ -294,13 +286,13 @@ namespace CheatGameApp
             if (e.Message is AudioMessage)
             {
                AudioMessage message = e.Message as AudioMessage;
-               recived_wave_stream = message.GetRecording();
-               Playrecording(recived_wave_stream);
+               recived_wave_stream = message.GetRecording();            
                if (lastClaimDeckLabel.Deck.Count != 0)
                {
                   replay.Visible = true;
                   EnterVerifiyClaimState();
                }
+              Playrecording(recived_wave_stream);
             }
             if (e.Message is ControlMessage)
             {
@@ -470,6 +462,7 @@ namespace CheatGameApp
 
         public void UpdateLastClaimGroupBox(BoardState myBoard)
         {
+
             string sLastClaimCount       = myBoard.LastClaimNum;
             string sLastClaimCardNumber  = myBoard.LastClaimType;
             int playedCardsNum           = myBoard.PlayedCardsNum;
@@ -969,7 +962,18 @@ namespace CheatGameApp
             _tcpConnection[connIndex].Send(new MoveMessage(move));
             //remove replay button if was visable
             replay.Visible = false;
-    }
+        }
+
+        public void SleepWithEvents(int milisecs)
+        {
+          Stopwatch stopwatch = new Stopwatch();
+          stopwatch.Start();
+          while (TimeSpan.FromMilliseconds(milisecs) > stopwatch.Elapsed)
+          {
+            Application.DoEvents();
+          }
+          stopwatch.Stop();
+        }
 
         private void StartGameButton_Click(object sender, EventArgs e)
         {
