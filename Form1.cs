@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Windows.Forms;
 using CheatGameApp.Model;
 using CheatGameModel.Network;
@@ -66,10 +63,12 @@ namespace CheatGameApp
         {
           LoadParams();
           FormClosing += new FormClosingEventHandler(CheatGame_Closing);
+          WaitWndFun loadingForm = new WaitWndFun();
+          loadingForm.Show();
           //connect to server
           TCPConnect();
           addActivitydetection();
-
+          loadingForm.Close();
           //show demographics dialog
           try
           {
@@ -115,14 +114,14 @@ namespace CheatGameApp
 
         void CheatGame_Closing(object sender, FormClosingEventArgs e)
         {
-            _tcpConnection[connIndex].Dispose();
+      _tcpConnection[connIndex].Dispose();
             Application.Exit();
         }
 
         private static void LoadParams()
         {
             //  XmlDocument doc = new XmlDocument();
-            // doc.Load(_paramsFileName);
+            // doc.Load(_paramsFileName);e
 
 
 
@@ -137,18 +136,18 @@ namespace CheatGameApp
             {
                 //string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
-                //string SERVER_ENDPOINT = "18.191.185.56";  //fasr server
-                //string CLIENT_ENDPOINT = "18.191.185.56";  //fast server
-                //string SERVER_ENDPOINT = "18.221.184.12";  // slow server
-                //string CLIENT_ENDPOINT = "18.221.184.12";  // slow server
-                string SERVER_ENDPOINT = "127.0.0.1";        // local host
-                string CLIENT_ENDPOINT = "127.0.0.1";        // local host
+                string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
+
+                //string SERVER_ENDPOINT = "18.223.29.163";  // slow server     
+                //string SERVER_ENDPOINT = "127.0.0.1";        // local host
+   
+                string CLIENT_ENDPOINT = SERVER_ENDPOINT; 
                 for (var i = 0; i < NUM_PLAYERS; i++)
-                {
-                    _tcpConnection[i] = new Client();
-                    _tcpConnection[i].SetIPEndPoints(SERVER_ENDPOINT + ":5432" + (i + 1).ToString(),
-                                                     CLIENT_ENDPOINT + ":5432" + (i + 1).ToString());
-                }
+                    {
+                        _tcpConnection[i] = new Client();
+                        _tcpConnection[i].SetIPEndPoints(SERVER_ENDPOINT + ":5432" + (i + 1).ToString(),
+                                                         CLIENT_ENDPOINT + ":5432" + (i + 1).ToString());
+                    }
             }
         }
         protected override void OnShown(EventArgs e)
@@ -993,6 +992,7 @@ namespace CheatGameApp
                                                                       MoveTime = TimeStamper.Time
             }));
             //remove replay button if was visable
+            ExitVerifiyClaimState();
             replay.Visible = false;
         } // NOTE: MoveTime may not be used on the server side due to clock differences
 
@@ -1069,8 +1069,8 @@ namespace CheatGameApp
             MoveTime = TimeStamper.Time
           }));
           //remove replay button if was visable
+          ExitVerifiyClaimState();
           replay.Visible = false;
-      
         }
 
     private void replay_Click(object sender, EventArgs e)

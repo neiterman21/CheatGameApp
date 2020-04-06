@@ -36,7 +36,7 @@ namespace CheatGameModel.Network
         }
         
 
-        protected Socket m_socket;
+        protected Socket m_socket = null;
         protected byte[] m_buffer = new byte[4096];
         protected List<byte> m_messageBuffer = new List<byte>();
         //protected StringBuilder m_messageSB = new StringBuilder();

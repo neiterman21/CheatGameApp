@@ -5,28 +5,84 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace CheatGameApp
 {
     public partial class WaitForm : Form
     {
-        public string WaitMessage { get { return label1.Text; } set { label1.Text = value; } }
-        public WaitForm()
+      public WaitForm()
+      {
+        InitializeComponent();
+        this.StartPosition = FormStartPosition.CenterParent;
+      }
+      public WaitForm(Form parent)
+      {
+        InitializeComponent();
+        if (parent != null)
         {
-            InitializeComponent();
-            this.KeyPreview = true;
+          this.StartPosition = FormStartPosition.Manual;
+          this.Location = new Point(parent.Location.X + parent.Width / 2 - this.Width / 2, parent.Location.Y + parent.Height / 2 - this.Height / 2);
         }
-        protected override void OnPreviewKeyDown(PreviewKeyDownEventArgs e)
+        else
         {
-            base.OnPreviewKeyDown(e);
-            if (e.KeyCode == Keys.Escape)
-            {
-                string title = "Exit";
-                string text = "Are you sure you want to exit the game?" + Environment.NewLine + "Any data that was unsaved will be lost.";
-                if (DialogResult.Yes == MessageBox.Show(text, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question))
-                    Application.Exit();
-            }
+          this.StartPosition = FormStartPosition.CenterParent;
         }
+      }
+      public void CloseLoadingForm()
+      {
+        this.DialogResult = DialogResult.OK;
+        this.Close();
+        if (label1.Image != null)
+        {
+          label1.Image.Dispose();
+        }
+      }
+    }
+
+ 
+
+    public class WaitWndFun
+    {
+      WaitForm loadingForm;
+      Thread loadthread;
+      /// <summary>
+      /// 显示等待框
+      /// </summary>
+      public void Show()
+      {
+        loadthread = new Thread(new ThreadStart(LoadingProcessEx));
+        loadthread.Start();
+      }
+      /// <summary>
+      /// 显示等待框
+      /// </summary>
+      /// <param name="parent">父窗体</param>
+      public void Show(Form parent)
+      {
+        loadthread = new Thread(new ParameterizedThreadStart(LoadingProcessEx));
+        loadthread.Start(parent);
+      }
+      public void Close()
+      {
+        if (loadingForm != null)
+        {
+          loadingForm.BeginInvoke(new System.Threading.ThreadStart(loadingForm.CloseLoadingForm));
+          loadingForm = null;
+          loadthread = null;
+        }
+      }
+      private void LoadingProcessEx()
+      {
+        loadingForm = new WaitForm();
+        loadingForm.ShowDialog();
+      }
+      private void LoadingProcessEx(object parent)
+      {
+        Form Cparent = parent as Form;
+        loadingForm = new WaitForm(Cparent);
+        loadingForm.ShowDialog();
+      }
     }
 }
