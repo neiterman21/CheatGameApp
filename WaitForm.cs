@@ -45,8 +45,9 @@ namespace CheatGameApp
 
     public class WaitWndFun
     {
-      WaitForm loadingForm;
+      WaitForm loadingForm = null;
       Thread loadthread;
+      bool can_close = false;
       /// <summary>
       /// 显示等待框
       /// </summary>
@@ -66,19 +67,26 @@ namespace CheatGameApp
       }
       public void Close()
       {
-        if (loadingForm != null)
-        {
-          loadingForm.BeginInvoke(new System.Threading.ThreadStart(loadingForm.CloseLoadingForm));
-          loadingForm = null;
-          loadthread = null;
-        }
+            while (!can_close) ;
+            
+            loadingForm.BeginInvoke(new System.Threading.ThreadStart(loadingForm.CloseLoadingForm));
+            loadingForm = null;
+            loadthread = null;
+            
       }
       private void LoadingProcessEx()
       {
         loadingForm = new WaitForm();
+        loadingForm.Shown += LoadingForm_Shown;
         loadingForm.ShowDialog();
       }
-      private void LoadingProcessEx(object parent)
+
+        private void LoadingForm_Shown(object sender, EventArgs e)
+        {
+            can_close = true;
+        }
+
+        private void LoadingProcessEx(object parent)
       {
         Form Cparent = parent as Form;
         loadingForm = new WaitForm(Cparent);

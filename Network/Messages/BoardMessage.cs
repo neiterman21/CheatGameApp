@@ -5,6 +5,7 @@ using System.Text;
 using CheatGameApp;
 using System.Xml;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace CheatGameModel.Network.Messages
 {
@@ -123,6 +124,18 @@ namespace CheatGameModel.Network.Messages
             BoardCardsNum = 52;
 
             IsServerTurn = false; // sets visibility/enabled to don't show/disable
+        }
+
+        public override String ToString()
+        {
+            string str = "";
+            foreach (PropertyDescriptor descriptor in System.ComponentModel.TypeDescriptor.GetProperties(this))
+            {
+                string name = descriptor.Name;
+                object value = descriptor.GetValue(this);
+                str += name + "=" + value + " \n";
+            }
+            return str;
         }
     }
 }

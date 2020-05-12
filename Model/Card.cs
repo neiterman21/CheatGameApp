@@ -51,10 +51,54 @@ namespace CheatGameApp
             }
         }
 
+        public string RecordString
+        {
+            get
+            {
+                switch (Number)
+                {
+                    case 11:
+                        return "Jack";
+                    case 12:
+                        return "Queen";
+                    case 13:
+                        return "King";
+                    case 1:
+                        return "Ace";
+                    case 2:
+                        return "Two";
+                    case 3:
+                        return "Three";
+                    case 4:
+                        return "Four";
+                    case 5:
+                        return "Five";
+                    case 6:
+                        return "Six";
+                    case 7:
+                        return "Seven";
+                    case 8:
+                        return "Eight";
+                    case 9:
+                        return "Nine";
+                    case 10:
+                        return "Ten";
+                    default:
+                        return m_number.ToString();
+                }
+            }
+        }
+
         public Card(int number, CardType type)
         {
             m_number = type == CardType.Deck ? 3 : number;
             m_type = type == CardType.Deck? type: CardType.Heart;
+        }
+
+        public Card(Card copy)
+        {
+            m_number = copy.m_number;
+            m_type = copy.m_type;
         }
 
         public Card(int[] cardcount) {
@@ -75,6 +119,11 @@ namespace CheatGameApp
         public Card Decrease()
         {
             return new Card(m_number == 1 ? Card.MaxNumber : m_number - 1, Type);
+        }
+
+        public bool isNear(Card operand)
+        {
+            return operand == Increase() || operand == Decrease();
         }
 
         public override string ToString()
@@ -200,6 +249,16 @@ namespace CheatGameApp
         public static bool operator <(Card operand1, Card operand2)
         {
             return operand1.CompareTo(operand2) == -1;
+        }
+
+        public static bool operator ==(Card operand1, Card operand2)
+        {
+            return operand1.CompareTo(operand2) == 0;
+        }
+
+        public static bool operator !=(Card operand1, Card operand2)
+        {
+            return operand1.CompareTo(operand2) != 0;
         }
 
     }

@@ -37,8 +37,9 @@ namespace CheatGameApp
     }
     protected void OnPlaybackStopped(object obj, StoppedEventArgs e)
     {
+            Console.WriteLine("done playing");
     }
-    protected void Playrecording(WaveStream record_strem)
+    public void Playrecording(WaveStream record_strem)
     {
       using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
       {
@@ -50,6 +51,7 @@ namespace CheatGameApp
         {
           System.Threading.Thread.Sleep(100);
         }
+        waveOut.Dispose();
       }
     }
     void PlayWellcomeMessage()
@@ -63,7 +65,8 @@ namespace CheatGameApp
         waveOut.Play();
         while (waveOut.PlaybackState == PlaybackState.Playing)
         {
-          System.Threading.Thread.Sleep(500);
+          System.Threading.Thread.Sleep(100);
+          Application.DoEvents();
         }
         this.YesButton.Visible = true;
         this.NoButton.Visible = true;

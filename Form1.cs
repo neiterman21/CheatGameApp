@@ -18,16 +18,19 @@ namespace CheatGameApp
 {
     public partial class Form1 : Form
     {
+        private bool is_agent = false;
         private Card m_lastClaimCard; // = new Card(5, CardType.Heart);
         private VideoForm _videoCapture;
         private Demographics _demographics;
+        private Agent agent = null;
+        private string record_dir = @"C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\Resources\Records_Woman\";
 
         // Define the output wav file of the recorded audio
         public WaveIn waveSource = null;
         public WaveFileWriter waveFile = null;
         MemoryStream ws = null;
         private WaveStream recived_wave_stream = null;
-        private WaveStream claim_record = null;
+        public WaveStream claim_record = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
 
         ManualResetEvent isRecordingEvent = new ManualResetEvent(false);
@@ -52,47 +55,86 @@ namespace CheatGameApp
         private static bool _needToClose = false;
         private BoardState Board = new BoardState();
 
-        public Form1()
+        public Form1(bool _is_agent = false)
         {
             InitializeComponent();
           
-            this.DoubleBuffered = true;          
+            this.DoubleBuffered = true;
+            this.is_agent = _is_agent;
+            agent = new Agent(record_dir , this);
+        }
+        public DeckLabel getmyDeck()
+        {
+            return this.myDeck;
+        }
+        public DeckLabel getLastClaimDeck()
+        {
+            return lastClaimDeckLabel;
         }
 
+        public DeckLabel gethighClaimOptionDeck()
+        {
+            return highClaimOptionDeck;
+        }
+        public DeckLabel getlowClaimOptionDeck()
+        {
+            return lowClaimOptionDeck;
+        }
+
+        public bool isStartGameEnabled()
+        {
+            return StartGameButton.Enabled;
+        }
+        
         private void Form1_Load(object sender, EventArgs e)
         {
-          LoadParams();
-          FormClosing += new FormClosingEventHandler(CheatGame_Closing);
-          WaitWndFun loadingForm = new WaitWndFun();
-          loadingForm.Show();
-          //connect to server
-          TCPConnect();
-          addActivitydetection();
-          loadingForm.Close();
-          //show demographics dialog
-          try
-          {
+            LoadParams();
+            FormClosing += new FormClosingEventHandler(CheatGame_Closing);
+            WaitWndFun loadingForm = new WaitWndFun();
+            loadingForm.Show();
+            //connect to server
+            TCPConnect();
+            addActivitydetection();
+            loadingForm.Close();
+            //show demographics dialog
+            if (!is_agent)
+            {
+                try
+                {
 
 
-            if (!_needToClose) ShowsoundTestForm();
-            if (!_needToClose) _demographics = ShowDemographicsForm();
-          }
-          catch
-          {
-            _needToClose = true;
-          }
-          if (_needToClose)  // raised on unsuccessful TCP connect attempt
-          {
-            Application.Exit();
-            Close();
-          }
-          //configure audio capture
-          audioRecordTimer.Interval = 4000;
-          audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
-          //send demographics to opponent
-          _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
-          
-          
+                    if (!_needToClose) ShowsoundTestForm();
+                    if (!_needToClose) _demographics = ShowDemographicsForm();
+                }
+                catch
+                {
+                    _needToClose = true;
+                }
+                
+            }else
+            {
+                _demographics = agent.fill_demographic_form();
+            }
+            if (_needToClose)  // raised on unsuccessful TCP connect attempt
+            {
+                Close();
+                Application.Exit();
+            }
+            //configure audio capture
+            audioRecordTimer.Interval = 4000;
+            audioRecordTimer.Tick += new EventHandler(audioRecordTimer_Tick);
+            //send demographics to opponent
+            _tcpConnection[connIndex].Send(new DemographicsMessage(_demographics));
+            agent_operation.Visible = false;
+            if (is_agent)
+            {
+                agent.agentMove();
+                PlayerName.Text = _demographics.FullName;
+                PlayerName.Show();
+                agent_operation.Text = "Agent On";
+                agent_operation.Visible = true;
+            }
+
         }
 
         private void addActivitydetection()
@@ -114,8 +156,8 @@ namespace CheatGameApp
 
         void CheatGame_Closing(object sender, FormClosingEventArgs e)
         {
-      _tcpConnection[connIndex].Dispose();
-            Application.Exit();
+            _tcpConnection[connIndex].Dispose();
+         //   Application.Exit();
         }
 
         private static void LoadParams()
@@ -136,10 +178,10 @@ namespace CheatGameApp
             {
                 //string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
-                string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
+                //string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
 
                 //string SERVER_ENDPOINT = "18.223.29.163";  // slow server     
-                //string SERVER_ENDPOINT = "127.0.0.1";        // local host
+                string SERVER_ENDPOINT = "127.0.0.1";        // local host
    
                 string CLIENT_ENDPOINT = SERVER_ENDPOINT; 
                 for (var i = 0; i < NUM_PLAYERS; i++)
@@ -226,9 +268,11 @@ namespace CheatGameApp
             if (e.Message is BoardMessage)
             {
                 // get the board data from the message
+                Debug.WriteLine("got board message " + DateTime.Now);
                 BoardMessage message = e.Message as BoardMessage;
                 BoardState myBoard = message.GetBoardState();
                 Board = myBoard;
+                Console.Write(Board.ToString());
                 m_gameTime = TimeSpan.FromSeconds(TrunTime);
                 allClaimsDeckLabel.Deck = new Deck();
                 allClaimsDeckLabel.FacingUp = false;
@@ -248,7 +292,7 @@ namespace CheatGameApp
                 {
                     gameDeckLabel.Deck = Deck.Parse(myBoard.BoardCardsNum.ToString());
                 }
-                HandleLastClaimGroupBox(myBoard.LastClaimType, myBoard.AgentStartPressed);
+              //  HandleLastClaimGroupBox(myBoard.LastClaimType, myBoard.AgentStartPressed);
                 //OpponentCardLabel.Text = myBoard.AgentCardsNum.ToString();
                 oppCardsCountLabel.Text = myBoard.AgentCardsNum + " Cards";
                 if (myBoard.AgentCardsNum != oppDeckLabel.Deck.Count)
@@ -281,17 +325,22 @@ namespace CheatGameApp
                     }
                     myDeck.ResumeSelectionChanged();
                 }
+                if (is_agent) agent.updateBoardState(Board);
             }
             if (e.Message is AudioMessage)
             {
+               Debug.WriteLine("got audio message " + DateTime.Now);
                AudioMessage message = e.Message as AudioMessage;
                recived_wave_stream = message.GetRecording();            
                if (lastClaimDeckLabel.Deck.Count != 0)
                {
                   replay.Visible = true;
-                  EnterVerifiyClaimState();
+                  if (!is_agent) EnterVerifiyClaimState();
                }
-              Playrecording(recived_wave_stream);
+             //   if (!is_agent)
+                    Playrecording(recived_wave_stream);
+                // else 
+                    agent.get_claim(recived_wave_stream);
             }
             if (e.Message is ControlMessage)
             {
@@ -302,7 +351,25 @@ namespace CheatGameApp
                     ShowOpponentDisconectedMessage(message.msg);
                 if (message.Commmand == ControlCommandType.Tick)
                     _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.Tick));
-      }
+                return;
+            }
+
+            agent.agentMove();
+         
+        }
+
+        public static void DelayAction(int millisecond, Action action)
+        {
+            var timer = new System.Windows.Forms.Timer();
+            timer.Tick += delegate
+
+            {
+                action.Invoke();
+                timer.Stop();
+            };
+
+            timer.Interval = millisecond;
+            timer.Start();
         }
         public void ShowEndGameMessage(string code)
         {
@@ -628,8 +695,8 @@ namespace CheatGameApp
 
         private void ControlOfGameStates(BoardState myBoard)
         {
-            bool startButtonPressed = myBoard.AgentStartPressed; 
-
+            bool startButtonPressed = myBoard.AgentStartPressed;
+           // Console.Write(myBoard.ToString());
             // user pressed Start 
             if (StartGameButton.Visible && startButtonPressed)
             {
@@ -640,7 +707,7 @@ namespace CheatGameApp
        // debugfunc();
                 return;
             }
-
+            Console.WriteLine("controll game");
             bool isMyTurn = !myBoard.IsServerTurn;
 
             // other user has joined
@@ -764,6 +831,7 @@ namespace CheatGameApp
 
                 turnOverCardsButton.Visible = true;
                 allClaimsCountLabel.Visible = false;
+                if (is_agent) turnOverCardsButton_Click(this, null);
                 //SetCountDownTimer(time: 5);
                 return;
             }
@@ -852,7 +920,7 @@ namespace CheatGameApp
            // realMoveDeck.Deck = e.SelectedDeck;
             UpdateClaimDecks(e.SelectedDeck.Count);
         }
-        private void OnClaimOptionDeck_SelectionChanged(object sender, DeckEventArgs e)
+        public void OnClaimOptionDeck_SelectionChanged(object sender, DeckEventArgs e)
         {
             DeckLabel deck = sender as DeckLabel;
             DeckLabel otherDeck = deck == lowClaimOptionDeck ? highClaimOptionDeck : lowClaimOptionDeck;
@@ -974,7 +1042,7 @@ namespace CheatGameApp
           stopwatch.Stop();
         }
 
-        private void StartGameButton_Click(object sender, EventArgs e)
+        public void StartGameButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.StartPressed,
                                                                       MoveTime = TimeStamper.Time
@@ -986,7 +1054,7 @@ namespace CheatGameApp
 
         #endregion Form Events
 
-        private void TakeCardButton_Click(object sender, EventArgs e)
+        public void TakeCardButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.TakeCard,
                                                                       MoveTime = TimeStamper.Time
@@ -996,7 +1064,7 @@ namespace CheatGameApp
             replay.Visible = false;
         } // NOTE: MoveTime may not be used on the server side due to clock differences
 
-        private void CallCheatButton_Click(object sender, EventArgs e)
+        public void CallCheatButton_Click(object sender, EventArgs e)
         {
             _tcpConnection[connIndex].Send(new MoveMessage(new Move { MoveType = MoveType.CallCheat,
                                                                       MoveTime = TimeStamper.Time
@@ -1011,8 +1079,9 @@ namespace CheatGameApp
             base.OnClosed(e);
         }
 
-        private void turnOverCardsButton_Click(object sender, EventArgs e)
+        public void turnOverCardsButton_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("clicking turn cards over");
             _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.End));
             turnOverCardsButton.Visible = false;
             allClaimsCountLabel.Visible = true;
@@ -1083,7 +1152,7 @@ namespace CheatGameApp
 
     }
 
-    private void MakeClaim_Click(object sender, EventArgs e)
+    public void MakeClaim_Click(object sender, EventArgs e)
     {
       m_gameTime = TimeSpan.FromSeconds(TrunTime / 2);
       claim_record  = CaptureAudio();
@@ -1132,6 +1201,11 @@ namespace CheatGameApp
       lowclaimhear.ResumeSelectionChanged();
     }
 
-
-  }
+        private void agent_operation_Click(object sender, EventArgs e)
+        {
+            is_agent = !is_agent;
+            if (is_agent) agent_operation.Text = "Agent On";
+            else agent_operation.Text = "Agent Off";
+        }
+    }
 }

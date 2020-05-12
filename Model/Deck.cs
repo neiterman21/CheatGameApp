@@ -75,6 +75,32 @@ namespace CheatGameApp.Model
         {
             return string.Join(", ", GetCounts());
         }
+        public string ToRecordString()
+        {
+            string record_string = "";
+            switch (Count)
+            {
+                case 1:
+                    record_string += "One_";
+                    break;
+                case 2:
+                    record_string += "Two_";
+                    break;
+                case 3:
+                    record_string += "Three_";
+                    break;
+                case 4:
+                    record_string += "Four_";
+                    break;
+                default:
+                    throw new System.ArgumentException("wrond amount of cards choosen by agent. chosen: " + Count + " cards");
+            }
+
+            List<List<Card>> reduced = ToReducedList();
+            record_string += reduced[0][0].RecordString + ".wav";
+
+            return record_string;
+        }
         public static Deck Parse(string s)
         {
             Deck deck = new Deck();

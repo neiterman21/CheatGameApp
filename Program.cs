@@ -16,15 +16,14 @@ namespace CheatGameApp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-      try
-      {
-        Application.Run(new Form1());
-      }
-      catch (Exception e)
-      {
-
-      }
-            
-    }
+            try
+            {
+                Application.Run(new Form1(true));
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+        }        
     }
 }

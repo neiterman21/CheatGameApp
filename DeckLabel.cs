@@ -19,7 +19,7 @@ namespace CheatGameApp
             Sorted,
         }
         public event EventHandler<DeckEventArgs> SelectionChanged;
-        private void RaiseSelectionChanged()
+        public void RaiseSelectionChanged()
         {
             if (SelectionChanged == null || m_supressSelectionChanged)
                 return;
@@ -35,9 +35,9 @@ namespace CheatGameApp
             m_supressSelectionChanged = false;
         }
 
-        private List<CardLabel> m_cardLabels = new List<CardLabel>();
+        public List<CardLabel> m_cardLabels = new List<CardLabel>();
         private bool m_selectClick = false;
-        private Deck m_deck = new Deck();
+        public Deck m_deck = new Deck();
         private Size m_cardSize = CardLabel.CardSize;
         private bool m_facingUp = true;
         private LayoutStyle m_style = LayoutStyle.Sorted;
