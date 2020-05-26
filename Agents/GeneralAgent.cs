@@ -5,40 +5,50 @@ using CheatGameModel.Players;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 
 namespace CheatGameApp.Agents
 {
-    class Agent
+    abstract class Agent
     {
-        private String record_dir;
-        private BoardState board;
-        private bool board_valid = false;
-        private WaveStream claim = null;
-        private bool claim_valid = false;
-        private Form1 form = null;
+        protected String record_dir;
+        protected BoardState board;
+        protected bool board_valid = false;
+        protected WaveStream claim = null;
+        protected bool claim_valid = false;
+        protected Form1 form = null;
         public Random random = new Random();
-        public bool first_move = false;
+        public bool first_move  = false;
+        protected Demographics demografic_form = new Demographics();
         protected List<TurnHistory> session = new List<TurnHistory>();
+
+
         public Agent(String record_dir_ , Form1 form_)
         {
             record_dir = record_dir_;
             form = form_;
         }
+        ~Agent()
+        {
+
+        }
+
+        #region game orepation and logging
 
         public Demographics fill_demographic_form()
         {
-            Demographics form = new Demographics();
-            form.Age = 1;
-            form.FullName = "Bob";
-            form.Gender = CheatGameModel.Players.Enumarations.Genders.Male;
-            form.EducationType = EducationType.BSc;
-            form.EducationField = EducationFields.ComputerSciense;
-            return form;
+
+            demografic_form.Age = 1;
+            demografic_form.FullName = "Bob";
+            demografic_form.Gender = CheatGameModel.Players.Enumarations.Genders.Male;
+            demografic_form.EducationType = EducationType.BSc;
+            demografic_form.EducationField = EducationFields.ComputerSciense;
+            return demografic_form;
         }
 
         public void onCardsRevel(Deck revel_deck)
         {
+            revel_deck.Reverse();
             IEnumerator<Card> enumerator = revel_deck.GetEnumerator();
             int j = 0;
             foreach (TurnHistory turn in session)
@@ -63,38 +73,50 @@ namespace CheatGameApp.Agents
         {   
             claim = _claim;
             claim_valid = true;
-
+            Debug.WriteLine("got new recording at: " + DateTime.Now);
             if (session.Count == 0 || session[session.Count - 1].recording != null)
                 session.Add(new TurnHistory());
-            session[session.Count - 1].recording = _claim;
+            else if(session[session.Count - 1].recording == null && session[session.Count - 1].actual != null)
+                session.Add(new TurnHistory());
+            session[session.Count - 1].recording = new RawSourceWaveStream(_claim, new WaveFormat(16000, 1));
         }
 
         public void setFirstCard(Deck first)
         {
             if (session.Count > 0) return;
+            Debug.WriteLine("adding first card");
             session.Add(new TurnHistory(new Deck(first), new Deck(first),null, false));
         }
 
         public void updateBoardState(BoardState _board)
         {
-            if (_board.IsServerTurn) return;
             board = _board;
             board_valid = true;
 
-            if (first_move) return;
-            if (session.Count == 0 || session[session.Count - 1].claim != null)
-                session.Add(new TurnHistory(new Deck(form.getLastClaimDeck().m_deck)));
-            else
-                session[session.Count - 1].claim = new Deck (form.getLastClaimDeck().m_deck);
+            if (!form.getStartGameButton().Visible && !board.AgentStartPressed) return; //end game
+            if (session.Count == 0) return;
+            else if (session[session.Count - 1].claim != null && session[session.Count - 1].claim.CompareTo(form.getLastClaimDeck().m_deck)) return;
+            else if (session[session.Count - 1].claim != null) session.Add(new TurnHistory(new Deck(form.getLastClaimDeck().m_deck)));
+            else session[session.Count - 1].claim = new Deck(form.getLastClaimDeck().m_deck);
+
             if (getSessionCount() != _board.PlayedCardsNum)
             {
                 throw  new System.ArgumentException("extra cards added session count = " + getSessionCount() + " played cards num = " + _board.PlayedCardsNum); 
             }
         }
 
-        protected bool shouldWait()
+        public void gameEnd()
         {
-            if (form.isStartGameEnabled())
+            session.Clear();
+            first_move = false;
+            board_valid = false;
+            claim_valid = false;
+            Debug.WriteLine("agent endgame");
+        }
+
+        private bool shouldWait()
+        {
+            if (form.getStartGameButton().Enabled)
             {   first_move = true;
                 board_valid = false;
                 claim_valid = false;
@@ -104,6 +126,8 @@ namespace CheatGameApp.Agents
             }
             if (board_valid == false) return true;
             if (board.IsServerTurn) return true;
+            if (!form.getStartGameButton().Visible && !board.AgentStartPressed) return true; //end game
+            if (form.getmyDeck().m_deck.Count == 0) return true;
 
             if (first_move) return false;
             if (!board.CanDispute) return false;
@@ -112,7 +136,7 @@ namespace CheatGameApp.Agents
             return false;
         }
 
-        protected void makeMove()
+        private void makeMove()
         {
             switch (decise_move())
             {
@@ -142,42 +166,39 @@ namespace CheatGameApp.Agents
             Form1.DelayAction(3500, new Action(() => { this.makeMove(); }));
         }
 
-        protected DeckLabel chooseClaim()
+        private void play_move(DeckLabel claim)
         {
-            DeckLabel cardLabels = form.getmyDeck();
-            Deck selected_cards = cardLabels.GetSelectedCards();
-            DeckLabel last_claim = form.getLastClaimDeck();
-            Card previusclaimcard = new Card(last_claim.Deck.GetCounts());
-            List<List<Card>> redused_selected_list = selected_cards.ToReducedList();
-
-            if (redused_selected_list.Count == 1 && previusclaimcard.Increase() == redused_selected_list[0][0])
+            if (shouldWait()) return;
+            Deck c = new Deck(claim.m_deck);
+            Deck act = new Deck();
+            foreach (CardLabel c_lable in form.getmyDeck().m_cardLabels)
             {
-                return form.gethighClaimOptionDeck();
+                if (c_lable.Selected)
+                {
+                    act.Add(new Card(c_lable.Card));
+                }
             }
 
-            if (redused_selected_list.Count == 1 && previusclaimcard.Decrease() == redused_selected_list[0][0])
-            {
-                return form.getlowClaimOptionDeck();
-            }
-            else
-            {
-
-                if (random.NextDouble() >= 0.5) return form.gethighClaimOptionDeck();
-                return form.getlowClaimOptionDeck();
-            }
+            session.Add(new TurnHistory(c, act, form.claim_record, true));
+            claim.RaiseSelectionChanged();
         }
 
-        protected MoveType decise_move()
-        {
-            return MoveType.PlayMove;
-            if (claim_valid && random.NextDouble() >= 0.5) return MoveType.CallCheat; 
-           if(haveLeagleMove()) return MoveType.PlayMove;
-           if (random.NextDouble() >= 0.7) return MoveType.TakeCard;
+        #endregion game orepation and logging
 
-            return MoveType.PlayMove;
+        #region game info
+        protected int getSessionCount()
+        {
+            int count = 0;
+            foreach (TurnHistory turn in session)
+            {
+                if (turn != null)
+                    count += turn.getCount();
+            }
+            return count;
         }
 
-        private bool haveLeagleMove()
+
+        protected bool haveLeagleMove()
         {
             List<CardLabel> cardLabels = form.getmyDeck().m_cardLabels;
             DeckLabel last_claim = form.getLastClaimDeck();
@@ -192,77 +213,25 @@ namespace CheatGameApp.Agents
             return false;
         }
 
-        protected int chooseCard()
-        {
-            int cards_chosen = 0;
-            List<CardLabel> cardLabels = form.getmyDeck().m_cardLabels;
+        #endregion #region game info
 
-            DeckLabel last_claim = form.getLastClaimDeck();
-            Card previusclaimcard = new Card(last_claim.Deck.GetCounts());
+        #region decision making 
 
-            foreach (CardLabel c_lable in cardLabels)
-            {
-                if (previusclaimcard.Decrease() == c_lable.Card)
-                {
-                    c_lable.Selected = true;
-                    cards_chosen++;
-                    
-                }
-            }
-            if (cards_chosen > 0) return cards_chosen;
+        protected abstract  MoveType decise_move();
 
-            foreach (CardLabel c_lable in cardLabels)
-            {
-                if (previusclaimcard.Increase() == c_lable.Card)
-                {
-                    c_lable.Selected = true;
-                    cards_chosen++;
-                }
-            }
-            if (cards_chosen > 0) return cards_chosen;
 
-            cards_chosen = 1;
-            for(int i = 0; i < cards_chosen; i++)
-            {
-                int index = random.Next(cardLabels.Count);
-                cardLabels[index].Selected = true;
-            }
-            return cards_chosen;
+        protected abstract int chooseCard();
 
-        }
-        protected void chooseRecord(DeckLabel claim)
-        {
-            string full_file_path = record_dir + claim.m_deck.ToRecordString();
-            form.claim_record = new NAudio.Wave.WaveFileReader(full_file_path);
+        protected abstract void chooseRecord(DeckLabel claim);
+ 
 
-            return;
-        }
+    protected abstract DeckLabel chooseClaim();
 
-        void play_move(DeckLabel claim)
-        {
-            Deck c = new Deck(claim.m_deck);
-            Deck act = new Deck();
-            foreach (CardLabel c_lable in form.getmyDeck().m_cardLabels)
-            {
-                if(c_lable.Selected)
-                {
-                    act.Add(new Card(c_lable.Card));
-                }
-            }
+        #endregion decision making
 
-            session.Add(new TurnHistory(c , act ,form.claim_record , true));
-            claim.RaiseSelectionChanged();
-        }
+        
 
-        public int getSessionCount()
-        {
-            int count = 0;
-            foreach(TurnHistory turn in session)
-            {
-                count += turn.getCount();
-            }
-            return count;
-        }
+        
 
 
     }

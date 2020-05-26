@@ -110,7 +110,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agents\DumbAgent.cs" />
     <Compile Include="Agents\GeneralAgent.cs" />
+    <Compile Include="Agents\PythonInterface.cs" />
+    <Compile Include="Agents\SmartAgent.cs" />
+    <Compile Include="Agents\TurnHistory.cs" />
     <Compile Include="DeckLabel.cs">
       <SubType>UserControl</SubType>
     </Compile>

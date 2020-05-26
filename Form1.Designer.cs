@@ -403,7 +403,6 @@
             this.myDeck.TabIndex = 0;
             this.myDeck.Visible = false;
             this.myDeck.SelectionChanged += new System.EventHandler<CheatGameApp.Model.DeckEventArgs>(this.deckLabel1_SelectionChanged);
-            this.myDeck.Load += new System.EventHandler(this.myDeck_Load);
             // 
             // highClaimOptionDeck
             // 

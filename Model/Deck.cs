@@ -5,9 +5,21 @@ using System.Text;
 
 namespace CheatGameApp.Model
 {
-    public sealed class Deck : List<Card> 
+    public sealed class Deck : List<Card>
     {
         public static readonly Deck FullDeck = Deck.Parse("4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4");
+
+        public Deck(Deck copy)
+        {
+            foreach(Card c in copy)
+            {
+                this.Add(new Card(c));
+            }
+        }
+        public Deck()
+        {
+
+        }
 
         public int GetCardCount(int number)
         {

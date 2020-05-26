@@ -13,17 +13,17 @@ using NAudio.Wave;
 using System.Threading;
 using System.Diagnostics;
 using NAudio.Utils;
+using CheatGameApp.Agents;
 
 namespace CheatGameApp
 {
     public partial class Form1 : Form
     {
         private bool is_agent = false;
-        private Card m_lastClaimCard; // = new Card(5, CardType.Heart);
-        private VideoForm _videoCapture;
+        private Card m_lastClaimCard; // = new Card(5, CardType.Heart)
         private Demographics _demographics;
         private Agent agent = null;
-        private string record_dir = @"C:\Users\neite\OneDrive\Documents\לימודים\cheatgit\CheatGameApp\Resources\Records_Woman\";
+        private string record_dir = @"C:\Users\neite\OneDrive\Documents\schooling\cheatgit\CheatGameApp\Resources\Records_Woman\";
 
         // Define the output wav file of the recorded audio
         public WaveIn waveSource = null;
@@ -46,7 +46,7 @@ namespace CheatGameApp
         public const int NUM_PLAYERS = 2;
         public static int game_num = 1;
         public static int TrunTime = 50; //seconds  
-        public static int GameTime = 12; //minuts
+        public static int GameTime = 1; //minuts
         private TimeSpan m_gameTime;
         private bool endGame = false;
         private TimeSpan total_game_time;
@@ -61,13 +61,19 @@ namespace CheatGameApp
           
             this.DoubleBuffered = true;
             this.is_agent = _is_agent;
-            agent = new Agent(record_dir , this);
+            agent = new SmartAgent(record_dir , this);
+                
         }
         public DeckLabel getmyDeck()
         {
             return this.myDeck;
         }
-        public DeckLabel getLastClaimDeck()
+
+        public DeckLabel getopponentDeck()
+        {
+            return this.oppDeckLabel;
+        }
+            public DeckLabel getLastClaimDeck()
         {
             return lastClaimDeckLabel;
         }
@@ -81,9 +87,14 @@ namespace CheatGameApp
             return lowClaimOptionDeck;
         }
 
-        public bool isStartGameEnabled()
+        public DeckLabel getallClaimsDeckLabel()
         {
-            return StartGameButton.Enabled;
+            return allClaimsDeckLabel;
+        }
+
+        public Button getStartGameButton()
+        {
+            return StartGameButton;
         }
         
         private void Form1_Load(object sender, EventArgs e)
@@ -101,16 +112,13 @@ namespace CheatGameApp
             {
                 try
                 {
-
-
                     if (!_needToClose) ShowsoundTestForm();
                     if (!_needToClose) _demographics = ShowDemographicsForm();
                 }
                 catch
                 {
                     _needToClose = true;
-                }
-                
+                }              
             }else
             {
                 _demographics = agent.fill_demographic_form();
@@ -134,7 +142,7 @@ namespace CheatGameApp
                 agent_operation.Text = "Agent On";
                 agent_operation.Visible = true;
             }
-
+            
         }
 
         private void addActivitydetection()
@@ -195,8 +203,6 @@ namespace CheatGameApp
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-
-
             this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
             this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
         }
@@ -269,10 +275,10 @@ namespace CheatGameApp
             {
                 // get the board data from the message
                 Debug.WriteLine("got board message " + DateTime.Now);
+
                 BoardMessage message = e.Message as BoardMessage;
                 BoardState myBoard = message.GetBoardState();
                 Board = myBoard;
-                Console.Write(Board.ToString());
                 m_gameTime = TimeSpan.FromSeconds(TrunTime);
                 allClaimsDeckLabel.Deck = new Deck();
                 allClaimsDeckLabel.FacingUp = false;
@@ -325,7 +331,7 @@ namespace CheatGameApp
                     }
                     myDeck.ResumeSelectionChanged();
                 }
-                if (is_agent) agent.updateBoardState(Board);
+                if (agent != null) agent.updateBoardState(myBoard);
             }
             if (e.Message is AudioMessage)
             {
@@ -337,10 +343,11 @@ namespace CheatGameApp
                   replay.Visible = true;
                   if (!is_agent) EnterVerifiyClaimState();
                }
-             //   if (!is_agent)
-                    Playrecording(recived_wave_stream);
+                //   if (!is_agent).
+                agent.get_claim(recived_wave_stream);
+                Playrecording(recived_wave_stream);
                 // else 
-                    agent.get_claim(recived_wave_stream);
+                    
             }
             if (e.Message is ControlMessage)
             {
@@ -374,10 +381,19 @@ namespace CheatGameApp
         public void ShowEndGameMessage(string code)
         {
             string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n ";
-            EndgameForm eg = new EndgameForm(massage , code); 
             hideAllComponents();
             endGame = true;
-            DialogResult a  = eg.ShowDialog(this);         
+            if (!is_agent)
+            { 
+            EndgameForm eg = new EndgameForm(massage, code);       
+            DialogResult a = eg.ShowDialog(this);
+            }
+            else
+            {
+                agent.gameEnd();
+            }
+
+            
             this.Close();
         }
 
@@ -393,10 +409,13 @@ namespace CheatGameApp
             {
               massage = "Unfortunatly your opponent disconected. \n you have compleated: " + (game_num - 1) + " games. you will be paid for the games to compleated. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " ;
             }
-            EndgameForm eg = new EndgameForm(massage,code);
             hideAllComponents();
             endGame = true;
-            DialogResult a = eg.ShowDialog(this);
+            if (!is_agent)
+            {
+                EndgameForm eg = new EndgameForm(massage, code);             
+                DialogResult a = eg.ShowDialog(this);
+            }
             this.Close();
 
     }
@@ -519,11 +538,6 @@ namespace CheatGameApp
             return demographics;
         }
 
-        protected void OnVideoCapture_Shown(object sender, EventArgs e)
-        {
-            _videoCapture.Location = System.Drawing.Point.Empty;
-        }
-
         #region Board Message Processing 
 
         public void UpdateLastClaimGroupBox(BoardState myBoard)
@@ -616,24 +630,8 @@ namespace CheatGameApp
             //realMoveDeck.Deck = new Deck();
         }
 
-        private void UpdateCurrentPlayingCard(string cardLiteral)
-        {
-            //TODO figer out what this does
-
-            //if (cardLiteral != "" && cardLiteral != "None")
-            //    currentCardCardLabel.Card = Card.FromLiteral(cardLiteral);
-            //else
-            //    currentCardCardLabel.Card = Card.EmptyDeck;
-        }
-
         private void UpdateClaimDecks(int count)
         {            
-            //lowClaimOptionDeck.Visible =
-            //    highClaimOptionDeck.Visible = (count != 0);
-            //if (count == 0)
-            //    claimPanel.Visible = false;
-            //else
-            //    claimPanel.Visible = true;
 
             bool isLowSelected = lowClaimOptionDeck.GetSelectedCards().Count > 0;
             bool isHighSelected = highClaimOptionDeck.GetSelectedCards().Count > 0; 
@@ -682,7 +680,7 @@ namespace CheatGameApp
                 MoveType = MoveType.ForfeitGame,
                 MoveTime = TimeStamper.Time
             }));
-            
+            agent.gameEnd();
         }
 
         protected void hideAllComponents()
@@ -696,7 +694,6 @@ namespace CheatGameApp
         private void ControlOfGameStates(BoardState myBoard)
         {
             bool startButtonPressed = myBoard.AgentStartPressed;
-           // Console.Write(myBoard.ToString());
             // user pressed Start 
             if (StartGameButton.Visible && startButtonPressed)
             {
@@ -748,6 +745,7 @@ namespace CheatGameApp
                 recordingLable.Visible = false;
                 replay.Visible = false;
                 timeLabel.Text = "00:00:40";
+                if (agent != null) agent.setFirstCard(lastClaimDeckLabel.m_deck);
                 return;
                 }
 
@@ -787,6 +785,7 @@ namespace CheatGameApp
                 gamesCountLabel.Visible = false;
                 replay.Visible = false;
                 gameTimer.Stop();
+                agent.gameEnd();
                 return;
             }
 
@@ -800,18 +799,6 @@ namespace CheatGameApp
                 myDeck.SelectNone(); 
 
                 string[] cardsToTurnOver = myBoard.UsedCardsNumbers.Split(',');
-                //usedCardLabel1.Card = new Card(Convert.ToInt16(cardsToTurnOver[0]),
-                //                                CardType.Heart);
-                //if (cardsToTurnOver.Count() > 1)
-                //    usedCardLabel2.Card = new Card(Convert.ToInt16(cardsToTurnOver[1]),
-                //                                CardType.Heart);
-                //if (cardsToTurnOver.Count() > 2)
-                //    usedCardLabel3.Card = new Card(Convert.ToInt16(cardsToTurnOver[2]),
-                //                                CardType.Heart);
-                //if (cardsToTurnOver.Count() > 3)
-                //    usedCardLabel4.Card = new Card(Convert.ToInt16(cardsToTurnOver[3]),
-                //                                CardType.Heart);
-                //usedCardLabel1.Text = "";
 
                 Deck revealDeck = new Deck();
                 
@@ -831,7 +818,11 @@ namespace CheatGameApp
 
                 turnOverCardsButton.Visible = true;
                 allClaimsCountLabel.Visible = false;
-                if (is_agent) turnOverCardsButton_Click(this, null);
+                if (is_agent)
+                {
+                    agent.onCardsRevel(new Deck(allClaimsDeckLabel.m_deck));
+                    turnOverCardsButton_Click(this, null);
+                }
                 //SetCountDownTimer(time: 5);
                 return;
             }
@@ -880,17 +871,6 @@ namespace CheatGameApp
                 //realMoveDeck.Deck = new Deck();
                 //claimPanel.Visible = false;
       }
-        }
-
-        private void HandleLastClaimGroupBox(string cardLiteral, bool startButtonPressed)
-        {
-            //TODO Ask amir what this does
-            //if (cardLiteral != "" && cardLiteral != "None")
-            //    currentCardCardLabel.Card = Card.FromLiteral(cardLiteral);
-            //else
-            //    currentCardCardLabel.Card = Card.EmptyDeck;
-
-            //currentCardCardLabel.Visible = startButtonPressed;
         }
 
 
@@ -1086,13 +1066,6 @@ namespace CheatGameApp
             turnOverCardsButton.Visible = false;
             allClaimsCountLabel.Visible = true;
             msgLabel.Text = "Please wait for other players to press the Turn Cards Over button";
-           // StatusLabel.Visible = true;
-            //allClaimsDeckLabel.Deck = new Deck();
-            //allClaimsDeckLabel.FacingUp = false;
-            //UnrevealCards(allCardsInGroupBox: usedDeckGroupBox);
-            //_tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.End));
-            //CallCheatButton.Text = WAIT_END_REVEAL_STATE_TEXT;
-            //CallCheatButton.Enabled = false;
         }
 
         
@@ -1113,11 +1086,13 @@ namespace CheatGameApp
              (oppDeckLabel.Deck.Count == myDeck.Deck.Count && Board.IsServerTurn))
           {
             forfeitGame();
-            MessageBox.Show("Time for a single game has ended. You have lost because your opponent has less cards. ");
+            if(!is_agent)
+                MessageBox.Show("Time for a single game has ended. You have lost because your opponent has less cards. ");
           }
           else
           {
-            MessageBox.Show("Time for a single game has ended. You have won because you have less cards. ");
+            if (!is_agent)
+               MessageBox.Show("Time for a single game has ended. You have won because you have less cards. ");
 
           }
         }
@@ -1145,11 +1120,6 @@ namespace CheatGameApp
     private void replay_Click(object sender, EventArgs e)
     {
       Playrecording(recived_wave_stream);
-    }
-
-    private void myDeck_Load(object sender, EventArgs e)
-    {
-
     }
 
     public void MakeClaim_Click(object sender, EventArgs e)
