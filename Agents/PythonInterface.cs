@@ -8,9 +8,9 @@ namespace CheatGameApp.Agents
 {
     class PythonInterface
     {
-        static string py_interpeter = @"C:\Users\neite\OneDrive\Documents\schooling\cheat_detector_model\venv\Scripts\python.exe";
+        static string py_interpeter = @"C:\Users\Administrator\AppData\Local\Programs\Python\Python37\python.exe";
         public ProcessStartInfo psi = new ProcessStartInfo();
-        public string default_script = @"C:\Users\neite\OneDrive\Documents\schooling\cheat_detector_model\DDetector_deploy.py";
+        public string default_script = @"C:\Users\Administrator\Desktop\agent\cheat_detector_model\evaluate.py";
 
         public PythonInterface()
         {

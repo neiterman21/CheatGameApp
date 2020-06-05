@@ -73,6 +73,9 @@ namespace CheatGameApp.Agents
         {   
             claim = _claim;
             claim_valid = true;
+
+            if (!form.is_agent) return;
+
             Debug.WriteLine("got new recording at: " + DateTime.Now);
             if (session.Count == 0 || session[session.Count - 1].recording != null)
                 session.Add(new TurnHistory());
@@ -92,6 +95,8 @@ namespace CheatGameApp.Agents
         {
             board = _board;
             board_valid = true;
+
+            if (!form.is_agent) return;
 
             if (!form.getStartGameButton().Visible && !board.AgentStartPressed) return; //end game
             if (session.Count == 0) return;
@@ -116,6 +121,7 @@ namespace CheatGameApp.Agents
 
         private bool shouldWait()
         {
+            if (!form.is_agent) return true;
             if (form.getStartGameButton().Enabled)
             {   first_move = true;
                 board_valid = false;
@@ -163,7 +169,8 @@ namespace CheatGameApp.Agents
         {
            
             if (shouldWait()) return;
-            Form1.DelayAction(3500, new Action(() => { this.makeMove(); }));
+            int wait = random.Next(7, 13000);
+            Form1.DelayAction(3000, new Action(() => { this.makeMove(); }));
         }
 
         private void play_move(DeckLabel claim)

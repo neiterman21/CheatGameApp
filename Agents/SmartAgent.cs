@@ -17,7 +17,7 @@ namespace CheatGameApp.Agents
         int audioIndex = 0;
         public SmartAgent(String record_dir_, Form1 form_) : base(record_dir_, form_)
         {
-            claim_dir = @"C:\Users\neite\OneDrive\Documents\schooling\cheatgit\CheatGameApp\Resources\AgentRec"  + DateTime.Now.ToFileTime();
+            claim_dir = @"C:\Users\Administrator\Desktop\agent\smartAgent\Resources\AgentRec" + DateTime.Now.ToFileTime();
             Console.WriteLine(claim_dir);
             di = Directory.CreateDirectory(claim_dir);
         }

@@ -14,16 +14,18 @@ using System.Threading;
 using System.Diagnostics;
 using NAudio.Utils;
 using CheatGameApp.Agents;
+using System.Linq;
 
 namespace CheatGameApp
 {
     public partial class Form1 : Form
     {
-        private bool is_agent = false;
+        public bool is_agent = false;
+        private int max_inslance_count = 20;
         private Card m_lastClaimCard; // = new Card(5, CardType.Heart)
         private Demographics _demographics;
         private Agent agent = null;
-        private string record_dir = @"C:\Users\neite\OneDrive\Documents\schooling\cheatgit\CheatGameApp\Resources\Records_Woman\";
+        private string record_dir = @"Resources\Records_Woman\";
 
         // Define the output wav file of the recorded audio
         public WaveIn waveSource = null;
@@ -32,6 +34,7 @@ namespace CheatGameApp
         private WaveStream recived_wave_stream = null;
         public WaveStream claim_record = null;
         System.Windows.Forms.Timer audioRecordTimer = new System.Windows.Forms.Timer();
+        private static Mutex mut = new Mutex();
 
         ManualResetEvent isRecordingEvent = new ManualResetEvent(false);
 
@@ -46,7 +49,7 @@ namespace CheatGameApp
         public const int NUM_PLAYERS = 2;
         public static int game_num = 1;
         public static int TrunTime = 50; //seconds  
-        public static int GameTime = 1; //minuts
+        public static int GameTime = 8; //minuts
         private TimeSpan m_gameTime;
         private bool endGame = false;
         private TimeSpan total_game_time;
@@ -63,6 +66,11 @@ namespace CheatGameApp
             this.is_agent = _is_agent;
             agent = new SmartAgent(record_dir , this);
                 
+        }
+
+        public int getCountRunningInslances()
+        {
+            return System.Diagnostics.Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location)).Count();
         }
         public DeckLabel getmyDeck()
         {
@@ -112,7 +120,7 @@ namespace CheatGameApp
             {
                 try
                 {
-                    if (!_needToClose) ShowsoundTestForm();
+                    //if (!_needToClose) ShowsoundTestForm();
                     if (!_needToClose) _demographics = ShowDemographicsForm();
                 }
                 catch
@@ -125,8 +133,9 @@ namespace CheatGameApp
             }
             if (_needToClose)  // raised on unsuccessful TCP connect attempt
             {
+                Process.Start(Application.ExecutablePath);
                 Close();
-                Application.Exit();
+                
             }
             //configure audio capture
             audioRecordTimer.Interval = 4000;
@@ -186,10 +195,10 @@ namespace CheatGameApp
             {
                 //string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
-                //string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
+                string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
 
                 //string SERVER_ENDPOINT = "18.223.29.163";  // slow server     
-                string SERVER_ENDPOINT = "127.0.0.1";        // local host
+                //string SERVER_ENDPOINT = "127.0.0.1";        // local host
    
                 string CLIENT_ENDPOINT = SERVER_ENDPOINT; 
                 for (var i = 0; i < NUM_PLAYERS; i++)
@@ -270,7 +279,19 @@ namespace CheatGameApp
                 this.BeginInvoke(new EventHandler<MessageEventArg>(OnTcpConnection_MessageReceived), sender, e);
                 return;
             }
+            if (e.Message is ControlMessage)
+            {
+                ControlMessage message = e.Message as ControlMessage;
+                if (message.Commmand == ControlCommandType.EndMatch)
+                    ShowEndGameMessage(message.msg);
+                if (message.Commmand == ControlCommandType.OpponentDisconected)
+                    ShowOpponentDisconectedMessage(message.msg);
+                if (message.Commmand == ControlCommandType.Tick)
+                    _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.Tick));
+                return;
+            }
 
+            mut.WaitOne(); 
             if (e.Message is BoardMessage)
             {
                 // get the board data from the message
@@ -341,27 +362,19 @@ namespace CheatGameApp
                if (lastClaimDeckLabel.Deck.Count != 0)
                {
                   replay.Visible = true;
-                  if (!is_agent) EnterVerifiyClaimState();
+                 // if (!is_agent) EnterVerifiyClaimState();
                }
                 //   if (!is_agent).
                 agent.get_claim(recived_wave_stream);
+                if (!is_agent)
                 Playrecording(recived_wave_stream);
                 // else 
                     
             }
-            if (e.Message is ControlMessage)
-            {
-               ControlMessage message = e.Message as ControlMessage;
-                if (message.Commmand == ControlCommandType.EndMatch)
-                    ShowEndGameMessage(message.msg);
-                if (message.Commmand == ControlCommandType.OpponentDisconected)
-                    ShowOpponentDisconectedMessage(message.msg);
-                if (message.Commmand == ControlCommandType.Tick)
-                    _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.Tick));
-                return;
-            }
+            
 
             agent.agentMove();
+            mut.ReleaseMutex();
          
         }
 
@@ -410,6 +423,7 @@ namespace CheatGameApp
               massage = "Unfortunatly your opponent disconected. \n you have compleated: " + (game_num - 1) + " games. you will be paid for the games to compleated. \n please save the code shown bellow. you will need to submit it in order to get paid. \n " ;
             }
             hideAllComponents();
+            if (endGame) return;
             endGame = true;
             if (!is_agent)
             {
@@ -515,7 +529,7 @@ namespace CheatGameApp
             }
             else
             {
-                EnterVerifiyClaimState();
+             //   EnterVerifiyClaimState();
                 return false;
             }
         }
@@ -712,6 +726,10 @@ namespace CheatGameApp
             {
                 playWelcomeMessagse();
                 // hide waiting message
+                if (is_agent && game_num == 1 && getCountRunningInslances() < max_inslance_count) //start a new game for next player
+                {
+                    Process.Start(Application.ExecutablePath);
+                }
                 StatusLabel.Visible = false;
 
                 m_gameTime = TimeSpan.FromSeconds(TrunTime);
@@ -1056,6 +1074,10 @@ namespace CheatGameApp
         protected override void OnClosed(EventArgs e)
         {
             DurationMeasureLog.Save();
+       //     if(is_agent && StatusLabel.Visible && game_num == 1)
+        //    {
+        //        Process.Start(Application.ExecutablePath);
+        //    }
             base.OnClosed(e);
         }
 
