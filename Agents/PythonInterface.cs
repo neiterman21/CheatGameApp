@@ -8,9 +8,13 @@ namespace CheatGameApp.Agents
 {
     class PythonInterface
     {
-        static string py_interpeter = @"C:\Users\Administrator\AppData\Local\Programs\Python\Python37\python.exe";
+          static string py_interpeter = @"C:\Users\Administrator\AppData\Local\Programs\Python\Python37\python.exe";      
+          public string default_script = @"C:\Users\Administrator\Desktop\agent\cheat_detector_model\evaluate.py";
+
+      //static string py_interpeter = @"C:\Users\neite\OneDrive\Documents\schooling\cheat_detector_model\venv\Scripts\python.exe";
+      //  public string default_script = @"C:\Users\neite\OneDrive\Documents\schooling\Ddetector_git\cheat_detector_keras\evaluate.py";
+
         public ProcessStartInfo psi = new ProcessStartInfo();
-        public string default_script = @"C:\Users\Administrator\Desktop\agent\cheat_detector_model\evaluate.py";
 
         public PythonInterface()
         {
@@ -55,15 +59,17 @@ namespace CheatGameApp.Agents
                 result = process.StandardOutput.ReadToEnd();
                 exit_code = process.ExitCode;
             }
-            if(exit_code > 1)
+            if(true)
             {
                 Console.WriteLine("output:");
                 Console.WriteLine(result);
                 Console.WriteLine("error:");
                 Console.WriteLine(error);
+                Console.WriteLine("exit_code:");
+                Console.WriteLine(exit_code);
             }
           
-
+            
             return exit_code;
         }
     }

@@ -17,13 +17,13 @@ namespace CheatGameApp.Agents
         int audioIndex = 0;
         public SmartAgent(String record_dir_, Form1 form_) : base(record_dir_, form_)
         {
-            claim_dir = @"C:\Users\Administrator\Desktop\agent\smartAgent\Resources\AgentRec" + DateTime.Now.ToFileTime();
+            claim_dir = @"Resources\AgentRec" + DateTime.Now.ToFileTime();
             Console.WriteLine(claim_dir);
             di = Directory.CreateDirectory(claim_dir);
         }
          ~SmartAgent()
         {
-            di.Delete(true);
+            //di.Delete(true);
         }
         protected override MoveType decise_move()
         {
@@ -59,7 +59,7 @@ namespace CheatGameApp.Agents
             int rc = pyapi.run(args);
             Console.WriteLine("exit code = " + rc);
 
-            if (rc == 1) return true; //detected a lie
+            if (rc == 1) return true; //false claim
             return false;
         }
     }

@@ -18,7 +18,7 @@ namespace CheatGameApp
 
             try
             {
-                Application.Run(new Form1(true));
+                Application.Run(new Form1(false));
             }
             catch (Exception e)
             {

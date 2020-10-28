@@ -52,6 +52,7 @@ namespace CheatGameApp
         public static int GameTime = 8; //minuts
         private TimeSpan m_gameTime;
         private bool endGame = false;
+        private bool game_ended_due_to_timeout = false;
         private TimeSpan total_game_time;
         private int num_of_unresponsive_turnes = 0;
         public static int connIndex;
@@ -195,10 +196,10 @@ namespace CheatGameApp
             {
                 //string SERVER_ENDPOINT = doc.GetParamString("SERVER_ENDPOINT");
                 //string CLIENT_ENDPOINT = doc.GetParamString("CLIENT_ENDPOINT");
-                string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
+                //string SERVER_ENDPOINT = "18.191.4.43";  //fasr server
 
                 //string SERVER_ENDPOINT = "18.223.29.163";  // slow server     
-                //string SERVER_ENDPOINT = "127.0.0.1";        // local host
+                string SERVER_ENDPOINT = "127.0.0.1";        // local host
    
                 string CLIENT_ENDPOINT = SERVER_ENDPOINT; 
                 for (var i = 0; i < NUM_PLAYERS; i++)
@@ -279,6 +280,8 @@ namespace CheatGameApp
                 this.BeginInvoke(new EventHandler<MessageEventArg>(OnTcpConnection_MessageReceived), sender, e);
                 return;
             }
+            //increased server disconection timeout because Smart agent wasn't calculating fasr enough. 
+            //better solution is to make pythonAPI non blocking.
             if (e.Message is ControlMessage)
             {
                 ControlMessage message = e.Message as ControlMessage;
@@ -287,7 +290,9 @@ namespace CheatGameApp
                 if (message.Commmand == ControlCommandType.OpponentDisconected)
                     ShowOpponentDisconectedMessage(message.msg);
                 if (message.Commmand == ControlCommandType.Tick)
+                {
                     _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.Tick));
+                }
                 return;
             }
 
@@ -372,8 +377,8 @@ namespace CheatGameApp
                     
             }
             
-
-            agent.agentMove();
+            if(is_agent)
+                agent.agentMove();
             mut.ReleaseMutex();
          
         }
@@ -395,18 +400,19 @@ namespace CheatGameApp
         {
             string massage = "Thank you for playing the game. It will help our reserch a lot. \n please save the code shown bellow. you will need to submit it in order to get paid. \n ";
             hideAllComponents();
-            endGame = true;
-            if (!is_agent)
+            
+            if (!is_agent && !endGame)
             { 
             EndgameForm eg = new EndgameForm(massage, code);       
             DialogResult a = eg.ShowDialog(this);
             }
-            else
+            
+            if(is_agent)
             {
                 agent.gameEnd();
             }
+            endGame = true;
 
-            
             this.Close();
         }
 
@@ -725,10 +731,11 @@ namespace CheatGameApp
             if (startButtonPressed && StatusLabel.Visible)
             {
                 playWelcomeMessagse();
+                game_ended_due_to_timeout = false;
                 // hide waiting message
                 if (is_agent && game_num == 1 && getCountRunningInslances() < max_inslance_count) //start a new game for next player
                 {
-                    Process.Start(Application.ExecutablePath);
+                   // Process.Start(Application.ExecutablePath);
                 }
                 StatusLabel.Visible = false;
 
@@ -1085,6 +1092,7 @@ namespace CheatGameApp
         {
             Console.WriteLine("clicking turn cards over");
             _tcpConnection[connIndex].Send(new ControlMessage(ControlCommandType.End));
+            Console.WriteLine("clicked turn cards over");
             turnOverCardsButton.Visible = false;
             allClaimsCountLabel.Visible = true;
             msgLabel.Text = "Please wait for other players to press the Turn Cards Over button";
@@ -1104,7 +1112,9 @@ namespace CheatGameApp
 
         private void EndGameDueToTimeOut()
         {
-          if((oppDeckLabel.Deck.Count < myDeck.Deck.Count) ||
+          if (game_ended_due_to_timeout) return;
+          game_ended_due_to_timeout = true;
+          if ((oppDeckLabel.Deck.Count < myDeck.Deck.Count) ||
              (oppDeckLabel.Deck.Count == myDeck.Deck.Count && Board.IsServerTurn))
           {
             forfeitGame();

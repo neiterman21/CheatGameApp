@@ -237,9 +237,6 @@ namespace CheatGameApp.Agents
         #endregion decision making
 
         
-
-        
-
-
     }
 }
+
